@@ -4,50 +4,33 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /*
  * This class deals with data on hidden tabs. 
  * To scrape hidden data, you need to use the .getAttribute("innerText") or .getAttribute("textContent") method.
  */
-public class ScrapeHiddenTabs {
-	
-	private static WebDriver driver;
-	private static WebDriverWait wait;
+public class ScrapeHiddenTabs extends WebScraper {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.
 	 */
 	public static void scrape() {
 		// Initializes web driver.
-		initWebDriver("http://www.etf.com/channels/bond-etfs");
+		init("http://www.etf.com/channels/bond-etfs");
 		// Clicks the pop-up message.
 		driver.findElement(By.cssSelector(".popupCloseButton")).click();
 		// Finds all the data and prints it.
-		findAndPrintAllData(driver);
+		findAndPrintAllData();
 		// Closes driver.
 		driver.close();
 	}
 	
 	/*
-	 * Initializes a Chrome web driver that represents a website DOM. 
-	 */
-	private static WebDriver initWebDriver(String url) {
-		System.setProperty("webdriver.chrome.driver", "C:/Program Files (x86)/chromedriver_win32/chromedriver.exe");
-		driver = new ChromeDriver();
-		driver.manage().window().maximize();
-		driver.get(url);
-		return driver;
-	}
-	
-	/*
 	 * Searches all hidden tabs and loops over them.
 	 */
-	private static void findAndPrintAllData(WebDriver driver) {
+	private static void findAndPrintAllData() {
 		// Scrapes the Fund Basics data.
 		System.out.println("Tab 1: Fund Basics");
 		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-0 tbody tr");
@@ -112,7 +95,8 @@ public class ScrapeHiddenTabs {
 	 */
 	private static void clickNext() {
 		driver.findElement(By.cssSelector("#nextPage")).click();
-		waitForPageLoad();
+		// Waits for the data to load.
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".symbolBasic")));
 	}
 	
 	/*
@@ -123,15 +107,8 @@ public class ScrapeHiddenTabs {
 		pageField.clear();
 		pageField.sendKeys("1");
 		pageField.sendKeys(Keys.RETURN);
-		waitForPageLoad();
-	}
-	
-	/*
-	 * Waits for the page to load.
-	 */
-	private static void waitForPageLoad() {
-		wait = new WebDriverWait(driver, 2000);
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".symbolBasic")));		
+		// Waits for the data to load.
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".symbolBasic")));
 	}
 
 	/*

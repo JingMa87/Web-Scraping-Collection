@@ -1,44 +1,26 @@
 package com.wixsite.jingmacv;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 /*
  * This class deals with clicking a hidden object. 
  * To click, you need to use a JavascriptExecutor class.
  */
-public class ClickHiddenObjects {
-	
-	private static WebDriver driver;
-	private static JavascriptExecutor js;
+public class ClickHiddenObjects extends WebScraper {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.
 	 */
 	public static void scrape() {
 		// Initializes web driver.
-		initWebDriver("http://www.etf.com/channels/bond-etfs");
+		init("http://www.etf.com/channels/bond-etfs");
 		// Clicks the pop-up message.
 		driver.findElement(By.cssSelector(".popupCloseButton")).click();
 		// Clicks on the next pages and prints the tab name.
 		clickNextLoop();
 		// Closes driver.
 		driver.close();
-	}
-
-	/*
-	 * Initializes a Chrome web driver that represents a website DOM. 
-	 */
-	private static WebDriver initWebDriver(String url) {
-		System.setProperty("webdriver.chrome.driver", "C:/Program Files (x86)/chromedriver_win32/chromedriver.exe");
-		driver = new ChromeDriver();
-		driver.manage().window().maximize();
-		driver.get(url);
-		js = (JavascriptExecutor) driver;
-		return driver;
 	}
 	
 	private static void clickNextLoop() {
