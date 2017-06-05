@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * This class deals with data on hidden tabs. 
  * To scrape hidden data, you need to use the .getAttribute("innerText") or .getAttribute("textContent") method.
  */
-public class HiddenTabs {
+public class ScrapeHiddenTabs {
 	
 	private static WebDriver driver;
 	private static WebDriverWait wait;
