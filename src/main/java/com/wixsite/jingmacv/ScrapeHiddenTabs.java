@@ -22,63 +22,35 @@ public class ScrapeHiddenTabs extends WebScraper {
 		// Clicks the pop-up message.
 		driver.findElement(By.cssSelector(".popupCloseButton")).click();
 		// Finds all the data and prints it.
-		findAndPrintAllData();
+		loopOverTabsAndPrintPages();
 		// Closes driver.
 		driver.close();
 	}
 	
 	/*
-	 * Searches all hidden tabs and loops over them.
+	 * Loops over all the hidden tabs and prints all the pages per tab.
 	 */
-	private static void findAndPrintAllData() {
-		// Scrapes the Fund Basics data.
-		System.out.println("Tab 1: Fund Basics");
-		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-0 tbody tr");
-
-		// Scrapes the Performance data.
-		System.out.println("Tab 2: Performance");
-		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-1 tbody tr");
-
-		// Scrapes the Analysis data.
-		System.out.println("Tab 3: Analysis");
-		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-2 tbody tr");
-
-		// Scrapes the Fundamentals data.
-		System.out.println("Tab 4: Fundamentals");
-		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-3 tbody tr");
-
-		// Scrapes the Classification data.
-		System.out.println("Tab 5: Classification");
-		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-4 tbody tr");
-
-		// Scrapes the Tax data.
-		System.out.println("Tab 6: Tax");
-		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-5 tbody tr");
-
-		// Scrapes the ESG data.
-		System.out.println("Tab 7: ESG");
-		findTableAndLoopOverPages("#quicktabs-tabpage-tabs-6 tbody tr");
-	}
-	
-	/*
-	 * Loops over all the pages of a hidden tab and prints the data.
-	 */
-	private static void findTableAndLoopOverPages(String css) {
-		int count = 0;
-		while (true) {
-			System.out.println("Page: " + ++count);
-			printTable(css);
-			if (driver.findElements(By.cssSelector(".nextPageActive")).size() == 0)
-				break;
-			clickNext();
+	private static void loopOverTabsAndPrintPages() {
+		// Loops over the tabs.
+		for (int i = 0; i <= 6; i++) {
+			System.out.println("Tab " + (i + 1) + ": ");
+			int count = 0;
+			// Loops over the pages.
+			while (true) {
+				System.out.println("Page: " + ++count);
+				printTablePage("#quicktabs-tabpage-tabs-" + Integer.toString(i) + " tbody tr");
+				if (driver.findElements(By.cssSelector(".nextPageActive")).size() == 0)
+					break;
+				clickNextPage();
+			}
+			resetPage();
 		}
-		resetPage();
 	}
 	
 	/*
-	 * Prints the data of a table.
+	 * Prints the data of a table page.
 	 */
-	private static void printTable(String css) {
+	private static void printTablePage(String css) {
 		List<WebElement> rows = driver.findElements(By.cssSelector(css));
 		for (WebElement row : rows) {
 			List<WebElement> fields = row.findElements(By.tagName("td"));
@@ -93,7 +65,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	/*
 	 * Clicks to the next page and waits for it to load.
 	 */
-	private static void clickNext() {
+	private static void clickNextPage() {
 		driver.findElement(By.cssSelector("#nextPage")).click();
 		// Waits for the data to load.
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".symbolBasic")));
