@@ -12,25 +12,31 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/*
+ * This class parses a XML file for data and prints it.
+ */
 public class XMLParser {
 
+	/*
+	 * The only public method in this class. Parses an XML file for data and prints it.
+	 */
 	public static void parseXML() {
-		// Builds a document object from an xml file.
 		DocumentBuilderFactory docBuildFactory = DocumentBuilderFactory.newInstance();
     	try {
+    		// Builds a document object from an XML file.
     		DocumentBuilder docBuilder = docBuildFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(new File("dataFiles/Data.xml"));
 	        doc.getDocumentElement().normalize();
-	        // Loops over the xml nodes and prints the children.
-	        NodeList DAMSettlementPointPrices = doc.getElementsByTagName("DAMSettlementPointPrice");
-	        System.out.println("Size: " + DAMSettlementPointPrices.getLength());
-	        for (int i = 0; i < DAMSettlementPointPrices.getLength(); i++) {
-	        	Element DAMSettlementPointPrice = (Element) DAMSettlementPointPrices.item(i);
-	        	System.out.print(DAMSettlementPointPrice.getElementsByTagName("DeliveryDate").item(0).getTextContent() + ", ");
-	        	System.out.print(DAMSettlementPointPrice.getElementsByTagName("HourEnding").item(0).getTextContent() + ", ");
-	        	System.out.print(DAMSettlementPointPrice.getElementsByTagName("SettlementPoint").item(0).getTextContent() + ", ");
-	        	System.out.print(DAMSettlementPointPrice.getElementsByTagName("SettlementPointPrice").item(0).getTextContent() + ", ");
-	        	System.out.print(DAMSettlementPointPrice.getElementsByTagName("DSTFlag").item(0).getTextContent() + "\n");
+	        // Loops over the XML nodes and prints the children.
+	        NodeList nodes = doc.getElementsByTagName("DAMSettlementPointPrice");
+	        System.out.println("Size: " + nodes.getLength());
+	        for (int i = 0; i < nodes.getLength(); i++) {
+	        	Element node = (Element) nodes.item(i);
+	        	System.out.print(node.getElementsByTagName("DeliveryDate").item(0).getTextContent() + ", ");
+	        	System.out.print(node.getElementsByTagName("HourEnding").item(0).getTextContent() + ", ");
+	        	System.out.print(node.getElementsByTagName("SettlementPoint").item(0).getTextContent() + ", ");
+	        	System.out.print(node.getElementsByTagName("SettlementPointPrice").item(0).getTextContent() + ", ");
+	        	System.out.print(node.getElementsByTagName("DSTFlag").item(0).getTextContent() + "\n");
 	        }
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -40,7 +46,10 @@ public class XMLParser {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/*
+	 * Main method.
+	 */
 	public static void main(String[] args) {
 		parseXML();
 	}

@@ -5,16 +5,24 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+/*
+ * This class parses a CSV file for data and prints it.
+ */
 public class CSVParser {
 
+	/*
+	 * The only public method in this class. Parses a CSV file for data and prints it.
+	 */
 	public static void parseCSV() {
 	    String line = "";
 	    BufferedReader br = null;
-	    try {	
+	    try {
+	    	// Reads the CSV file.
 	    	br = new BufferedReader(new FileReader("dataFiles/data.csv"));
 	        while ((line = br.readLine()) != null) {	
-	            // Splits the line into comma separated values.
+	            // Splits every line into comma separated values.
 	            String[] values = line.split(",");	
+	            // Loops over the values and prints them.
 	            for (int i = 0; i < values.length; i++) {
 	            	System.out.print(values[i]);
 	            	if (i != values.length - 1)
@@ -36,7 +44,10 @@ public class CSVParser {
 	        }
 	    }
 	}
-	
+
+	/*
+	 * Main method.
+	 */	
 	public static void main(String[] args) {
 		parseCSV();
 	}
