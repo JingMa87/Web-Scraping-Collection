@@ -1,7 +1,11 @@
 package com.wixsite.jingmacv;
 
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -20,7 +24,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 		// Initializes web driver.
 		init("http://www.etf.com/channels/bond-etfs");
 		// Clicks the pop-up message.
-		driver.findElement(By.cssSelector(".popupCloseButton")).click();
+		//driver.findElement(By.cssSelector(".popupCloseButton")).click();
 		// Finds all the data and prints it.
 		loopOverTabsAndPrintPages();
 		// Closes driver.
@@ -32,34 +36,228 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 */
 	private static void loopOverTabsAndPrintPages() {
 		// Loops over the tabs.
-		for (int i = 0; i <= 6; i++) {
-			System.out.println("Tab " + (i + 1) + ": ");
+//		for (int i = 0; i <= 6; i++) {
+//			System.out.println("Tab " + (i + 1) + ": ");
 			int count = 0;
 			// Loops over the pages.
 			while (true) {
 				System.out.println("Page: " + ++count);
-				printTablePage("#quicktabs-tabpage-tabs-" + Integer.toString(i) + " tbody tr");
+				savePageData("#quicktabs-tabpage-tabs-" + 6 + " tbody tr");
 				if (driver.findElements(By.cssSelector(".nextPageActive")).size() == 0)
 					break;
 				clickNextPage();
 			}
 			resetPage();
-		}
+//		}
 	}
 	
 	/*
 	 * Prints the data of a table page.
 	 */
-	private static void printTablePage(String css) {
+	private static void savePageData(String css) {
 		List<WebElement> rows = driver.findElements(By.cssSelector(css));
 		for (WebElement row : rows) {
 			List<WebElement> fields = row.findElements(By.tagName("td"));
-			for (WebElement field : fields) {
-				System.out.print(field.getAttribute("innerText") + ", ");
+			if (css.equals("#quicktabs-tabpage-tabs-0 tbody tr")) {
+				//saveFundBasicsRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(5), fields.get(6));
 			}
-			System.out.println();	
+			else if (css.equals("#quicktabs-tabpage-tabs-1 tbody tr")) {
+				//savePerformanceRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(5), fields.get(6), fields.get(7));
+			}
+			else if (css.equals("#quicktabs-tabpage-tabs-2 tbody tr")) {
+				//saveAnalysisRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(5), fields.get(6), fields.get(7), fields.get(8));
+			}
+			else if (css.equals("#quicktabs-tabpage-tabs-3 tbody tr")) {
+				//saveFundamentalsRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(6), fields.get(7), fields.get(8));
+			}
+			else if (css.equals("#quicktabs-tabpage-tabs-4 tbody tr")) {
+				//saveFundamentalsRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(6), fields.get(7), fields.get(8));
+			}
+			else if (css.equals("#quicktabs-tabpage-tabs-5 tbody tr")) {
+				//saveTaxRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(5));
+			}
+			else if (css.equals("#quicktabs-tabpage-tabs-6 tbody tr")) {
+				//saveEsgRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(5), fields.get(6), fields.get(7));
+			}
 		}
-		System.out.println();
+	}
+
+	/*
+	 * Saves a row to the wsc_fund_basics table.
+	 */
+	private static void saveFundBasicsRow(WebElement ticker, WebElement fundName, WebElement issuer, 
+								WebElement expenseRatio, WebElement aum, WebElement spread, WebElement segment) {
+		DBUtil.initConnection();
+		try {
+			pstmt = conn.prepareStatement("INSERT INTO wsc_fund_basics (ticker, fund_name, issuer, " + 
+										  "expense_ratio, aum, spread, segment) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, ticker.getAttribute("innerText"));
+			pstmt.setString(2, fundName.getAttribute("innerText"));
+			pstmt.setString(3, issuer.getAttribute("innerText"));
+			pstmt.setString(4, expenseRatio.getAttribute("innerText"));
+			pstmt.setString(5, aum.getAttribute("innerText"));
+			pstmt.setString(6, spread.getAttribute("innerText"));
+			pstmt.setString(7, segment.getAttribute("innerText"));
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(pstmt);
+			DBUtil.close(conn);
+		}		
+	}
+	
+	/*
+	 * Saves a row to the wsc_performance table.
+	 */
+	private static void savePerformanceRow(WebElement ticker, WebElement fundName, WebElement oneMonth, WebElement threeMonth, 
+								WebElement oneYear, WebElement fiveYear, WebElement tenYear, WebElement asOf) {
+		DBUtil.initConnection();
+		try {
+			pstmt = conn.prepareStatement("INSERT INTO wsc_performance (ticker, fund_name, one_month, three_month, " + 
+										  "one_year, five_year, ten_year, as_of) VALUES (?, ?, ?, ?, ?, ?, ?, to_date(?, 'MM/dd/yyyy'))");
+			pstmt.setString(1, ticker.getAttribute("innerText"));
+			pstmt.setString(2, fundName.getAttribute("innerText"));
+			pstmt.setString(3, oneMonth.getAttribute("innerText"));
+			pstmt.setString(4, threeMonth.getAttribute("innerText"));
+			pstmt.setString(5, oneYear.getAttribute("innerText"));
+			pstmt.setString(6, fiveYear.getAttribute("innerText"));
+			pstmt.setString(7, tenYear.getAttribute("innerText"));
+			pstmt.setString(8, asOf.getAttribute("innerText"));
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(pstmt);
+			DBUtil.close(conn);
+		}
+	}
+	
+	/*
+	 * Saves a row to the wsc_analysis table.
+	 */
+	private static void saveAnalysisRow(WebElement ticker, WebElement fundName, WebElement issuer, WebElement segment, 
+								WebElement grade, WebElement e, WebElement t, WebElement f) {
+		DBUtil.initConnection();
+		try {
+			pstmt = conn.prepareStatement("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
+										  "grade, e, t, f) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, ticker.getAttribute("innerText"));
+			pstmt.setString(2, fundName.getAttribute("innerText"));
+			pstmt.setString(3, issuer.getAttribute("innerText"));
+			pstmt.setString(4, segment.getAttribute("innerText"));
+			pstmt.setString(5, grade.getAttribute("innerText"));
+			// If the next 3 values are not integers, null gets saved in the database instead.
+			integerOrNull(6, e.getAttribute("innerText"));
+			integerOrNull(7, t.getAttribute("innerText"));
+			integerOrNull(8, f.getAttribute("innerText"));
+			pstmt.executeUpdate();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} finally {
+			DBUtil.close(pstmt);
+			DBUtil.close(conn);
+		}
+	}
+	
+	/*
+	 * Saves a row to the wsc_fundamentals table.
+	 */
+	private static void saveFundamentalsRow(WebElement ticker, WebElement fundName, WebElement dividendYield, WebElement pe, 
+								WebElement pb, WebElement duration, WebElement creditQuality, WebElement ytm) {
+		DBUtil.initConnection();
+		try {
+			pstmt = conn.prepareStatement("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
+										  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, ticker.getAttribute("innerText"));
+			pstmt.setString(2, fundName.getAttribute("innerText"));
+			pstmt.setString(3, dividendYield.getAttribute("innerText"));
+			pstmt.setString(4, pe.getAttribute("innerText"));
+			pstmt.setString(5, pb.getAttribute("innerText"));
+			// If the value is not a float, null gets saved in the database instead.
+			floatOrNull(6, duration.getAttribute("innerText"));
+			pstmt.setString(7, creditQuality.getAttribute("innerText"));
+			pstmt.setString(8, ytm.getAttribute("innerText"));
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(pstmt);
+			DBUtil.close(conn);
+		}
+	}
+	
+	/*
+	 * Saves a row to the wsc_tax table.
+	 */
+	private static void saveTaxRow(WebElement ticker, WebElement fundName, WebElement legalStructure, WebElement maxLTCapitalGainsRate, 
+								WebElement maxSTCapitalGainsRate, WebElement taxReporting) {
+		DBUtil.initConnection();
+		try {
+			pstmt = conn.prepareStatement("INSERT INTO wsc_tax (ticker, fund_name, legal_structure, max_lt_capital_gains_rate, " + 
+										  "max_st_capital_gains_rate, tax_reporting) VALUES (?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, ticker.getAttribute("innerText"));
+			pstmt.setString(2, fundName.getAttribute("innerText"));
+			pstmt.setString(3, legalStructure.getAttribute("innerText"));
+			pstmt.setString(4, maxLTCapitalGainsRate.getAttribute("innerText"));
+			pstmt.setString(5, maxSTCapitalGainsRate.getAttribute("innerText"));
+			pstmt.setString(6, taxReporting.getAttribute("innerText"));
+			pstmt.executeUpdate();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} finally {
+			DBUtil.close(pstmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	/*
+	 * Saves a row to the wsc_esg table.
+	 */
+	private static void saveEsgRow(WebElement ticker, WebElement fundName, WebElement msciEsgQualityScore, 
+								   WebElement esgScorePeerRank, WebElement esgScoreGlobalRank, WebElement carbonIntensity, 
+								   WebElement sustainableImpactExposure, WebElement sriScreeningCriteriaExposure) {
+		DBUtil.initConnection();
+		try {
+			pstmt = conn.prepareStatement("INSERT INTO wsc_esg (ticker, fund_name, msci_esg_quality_score, " + 
+										  "esg_score_peer_rank, esg_score_global_rank, carbon_intensity, " + 
+										  "sustainable_impact_exposure, sri_screening_crit_exposure) " +
+										  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			pstmt.setString(1, ticker.getAttribute("innerText"));
+			pstmt.setString(2, fundName.getAttribute("innerText"));
+			pstmt.setString(3, msciEsgQualityScore.getAttribute("innerText"));
+			pstmt.setString(4, esgScorePeerRank.getAttribute("innerText"));
+			pstmt.setString(5, esgScoreGlobalRank.getAttribute("innerText"));
+			pstmt.setString(6, carbonIntensity.getAttribute("innerText"));
+			pstmt.setString(7, sustainableImpactExposure.getAttribute("innerText"));
+			pstmt.setString(8, sriScreeningCriteriaExposure.getAttribute("innerText"));
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(pstmt);
+			DBUtil.close(conn);
+		}		
+	}
+	
+	/*
+	 * Checks if the string is an int, otherwise sets a null value in the database.
+	 */
+	private static void integerOrNull(int index, String text) throws SQLException {
+		if (NumberUtils.isCreatable(text))
+			pstmt.setInt(index, Integer.parseInt(text));
+		else
+			pstmt.setNull(index, Types.INTEGER);
+	}
+	
+	/*
+	 * Checks if the string is a float, otherwise sets a null value in the database.
+	 */
+	private static void floatOrNull(int index, String text) throws SQLException {
+		if (NumberUtils.isCreatable(text))
+			pstmt.setFloat(index, Float.parseFloat(text));
+		else
+			pstmt.setNull(index, Types.INTEGER);
 	}
 	
 	/*
