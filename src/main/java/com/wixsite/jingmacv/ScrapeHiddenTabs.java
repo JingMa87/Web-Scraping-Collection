@@ -41,7 +41,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 			// Loops over the pages.
 			while (true) {
 				System.out.println("Page: " + ++count);
-				savePageData("#quicktabs-tabpage-tabs-" + 1 + " tbody tr");
+				savePageData("#quicktabs-tabpage-tabs-" + 3 + " tbody tr");
 				if (driver.findElements(By.cssSelector(".nextPageActive")).size() == 0)
 					break;
 				clickNextPage();
@@ -66,13 +66,13 @@ public class ScrapeHiddenTabs extends WebScraper {
 				//saveFundBasicsRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-1 tbody tr")) {
-				savePerformanceRow(fields);
+				//savePerformanceRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-2 tbody tr")) {
-				//saveAnalysisRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(5), fields.get(6), fields.get(7), fields.get(8));
+				//saveAnalysisRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-3 tbody tr")) {
-				//saveFundamentalsRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(6), fields.get(7), fields.get(8));
+				saveFundamentalsRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-4 #classificationScrollContainer tbody tr")) {
 //				saveClassificationRow(fields.get(1), fields.get(0), fields.get(2), fields.get(3), fields.get(4), fields.get(5), 
@@ -131,21 +131,22 @@ public class ScrapeHiddenTabs extends WebScraper {
 	/*
 	 * Saves a row to the wsc_analysis table.
 	 */
-	private static void saveAnalysisRow(WebElement ticker, WebElement fundName, WebElement issuer, WebElement segment, 
-										WebElement grade, WebElement e, WebElement t, WebElement f) {
+	private static void saveAnalysisRow(List<WebElement> fields) {
 		DBUtil.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
 										  "grade, e, t, f) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-			pstmt.setString(1, ticker.getAttribute("innerText"));
-			pstmt.setString(2, fundName.getAttribute("innerText"));
-			pstmt.setString(3, issuer.getAttribute("innerText"));
-			pstmt.setString(4, segment.getAttribute("innerText"));
-			pstmt.setString(5, grade.getAttribute("innerText"));
-			// If the next 3 values are not integers, null gets saved in the database instead.
-			setIntOrNull(6, e.getAttribute("innerText"));
-			setIntOrNull(7, t.getAttribute("innerText"));
-			setIntOrNull(8, f.getAttribute("innerText"));
+			int fieldIndex = 1;
+			for (int i = 0; i < fields.size(); i++) {
+				if (i == 4)
+					continue;
+				// If the next 3 values are not integers, null gets saved in the database instead.
+				if (fieldIndex == 6 || fieldIndex == 7 || fieldIndex == 8)
+					setIntOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
+				else
+					pstmt.setString(fieldIndex, fields.get(i).getAttribute("innerText"));
+				fieldIndex++;
+			}
 			pstmt.executeUpdate();
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -158,21 +159,22 @@ public class ScrapeHiddenTabs extends WebScraper {
 	/*
 	 * Saves a row to the wsc_fundamentals table.
 	 */
-	private static void saveFundamentalsRow(WebElement ticker, WebElement fundName, WebElement dividendYield, WebElement pe, 
-											WebElement pb, WebElement duration, WebElement creditQuality, WebElement ytm) {
+	private static void saveFundamentalsRow(List<WebElement> fields) {
 		DBUtil.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
 										  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-			pstmt.setString(1, ticker.getAttribute("innerText"));
-			pstmt.setString(2, fundName.getAttribute("innerText"));
-			pstmt.setString(3, dividendYield.getAttribute("innerText"));
-			pstmt.setString(4, pe.getAttribute("innerText"));
-			pstmt.setString(5, pb.getAttribute("innerText"));
-			// If the value is not a float, null gets saved in the database instead.
-			setFloatOrNull(6, duration.getAttribute("innerText"));
-			pstmt.setString(7, creditQuality.getAttribute("innerText"));
-			pstmt.setString(8, ytm.getAttribute("innerText"));
+			int fieldIndex = 1;
+			for (int i = 0; i < fields.size(); i++) {
+				if (i == 5)
+					continue;
+				// If the value is not a float, null gets saved in the database instead.
+				if (fieldIndex == 6)
+					setFloatOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
+				else
+					pstmt.setString(fieldIndex, fields.get(i).getAttribute("innerText"));
+				fieldIndex++;
+			}
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
