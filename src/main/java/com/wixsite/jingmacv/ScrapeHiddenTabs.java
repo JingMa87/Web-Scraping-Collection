@@ -35,19 +35,53 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 */
 	private static void loopOverTabsAndPrintPages() {
 		// Loops over the tabs.
-//		for (int i = 0; i <= 6; i++) {
-//			System.out.println("Tab " + (i + 1) + ": ");
+		for (int i = 0; i <= 6; i++) {
+			System.out.println("Tab " + (i + 1));
+			// Removes all rows from the table.
+			resetTable(i);
 			int count = 0;
 			// Loops over the pages.
 			while (true) {
-				System.out.println("Page: " + ++count);
-				savePageData("#quicktabs-tabpage-tabs-" + 4 + " tbody tr");
+				System.out.println("Page " + ++count);
+				// Inserts all the rows on this page to the database table and clicks to the next page.
+				savePageData("#quicktabs-tabpage-tabs-" + i + " tbody tr");
 				if (driver.findElements(By.cssSelector(".nextPageActive")).size() == 0)
 					break;
 				clickNextPage();
 			}
 			resetPage();
-//		}
+		}
+	}
+	
+	/*
+	 * Resets the table.
+	 */
+	public static void resetTable(int tableIndex) {
+		// Deletes all data from the table.
+		try {
+			DBUtil.initConnection();
+			stmt = conn.createStatement();
+			if (tableIndex == 0)
+				stmt.executeQuery("DELETE FROM wsc_fund_basics");
+			else if (tableIndex == 1)
+				stmt.executeQuery("DELETE FROM wsc_performance");
+			else if (tableIndex == 2)
+				stmt.executeQuery("DELETE FROM wsc_analysis");
+			else if (tableIndex == 3)
+				stmt.executeQuery("DELETE FROM wsc_fundamentals");
+			else if (tableIndex == 4)
+				stmt.executeQuery("DELETE FROM wsc_classification");
+			else if (tableIndex == 5)
+				stmt.executeQuery("DELETE FROM wsc_tax");
+			else if (tableIndex == 6)
+				stmt.executeQuery("DELETE FROM wsc_esg");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+	    	// Closes all transaction objects.
+		    DBUtil.close(stmt);
+		    DBUtil.close(conn);
+	    }
 	}
 	
 	/*
@@ -63,25 +97,25 @@ public class ScrapeHiddenTabs extends WebScraper {
 		for (WebElement row : rows) {
 			List<WebElement> fields = row.findElements(By.tagName("td"));
 			if (css.equals("#quicktabs-tabpage-tabs-0 tbody tr")) {
-				//saveFundBasicsRow(fields);
+				saveFundBasicsRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-1 tbody tr")) {
-				//savePerformanceRow(fields);
+				savePerformanceRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-2 tbody tr")) {
-				//saveAnalysisRow(fields);
+				saveAnalysisRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-3 tbody tr")) {
-				//saveFundamentalsRow(fields);
+				saveFundamentalsRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-4 #classificationScrollContainer tbody tr")) {
 				saveClassificationRow(fields);
 			}			
 			else if (css.equals("#quicktabs-tabpage-tabs-5 tbody tr")) {
-				//saveTaxRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(5));
+				saveTaxRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-6 tbody tr")) {
-				//saveEsgRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(5), fields.get(6), fields.get(7));
+				saveEsgRow(fields);
 			}
 		}
 	}
@@ -214,18 +248,14 @@ public class ScrapeHiddenTabs extends WebScraper {
 	/*
 	 * Saves a row to the wsc_tax table.
 	 */
-	private static void saveTaxRow(WebElement ticker, WebElement fundName, WebElement legalStructure, WebElement maxLTCapitalGainsRate, 
-								   WebElement maxSTCapitalGainsRate, WebElement taxReporting) {
+	private static void saveTaxRow(List<WebElement> fields) {
 		DBUtil.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_tax (ticker, fund_name, legal_structure, max_lt_capital_gains_rate, " + 
 										  "max_st_capital_gains_rate, tax_reporting) VALUES (?, ?, ?, ?, ?, ?)");
-			pstmt.setString(1, ticker.getAttribute("innerText"));
-			pstmt.setString(2, fundName.getAttribute("innerText"));
-			pstmt.setString(3, legalStructure.getAttribute("innerText"));
-			pstmt.setString(4, maxLTCapitalGainsRate.getAttribute("innerText"));
-			pstmt.setString(5, maxSTCapitalGainsRate.getAttribute("innerText"));
-			pstmt.setString(6, taxReporting.getAttribute("innerText"));
+			for (int i = 0; i < fields.size(); i++) {
+				pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+			}
 			pstmt.executeUpdate();
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -238,23 +268,16 @@ public class ScrapeHiddenTabs extends WebScraper {
 	/*
 	 * Saves a row to the wsc_esg table.
 	 */
-	private static void saveEsgRow(WebElement ticker, WebElement fundName, WebElement msciEsgQualityScore, 
-								   WebElement esgScorePeerRank, WebElement esgScoreGlobalRank, WebElement carbonIntensity, 
-								   WebElement sustainableImpactExposure, WebElement sriScreeningCriteriaExposure) {
+	private static void saveEsgRow(List<WebElement> fields) {
 		DBUtil.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_esg (ticker, fund_name, msci_esg_quality_score, " + 
 										  "esg_score_peer_rank, esg_score_global_rank, carbon_intensity, " + 
 										  "sustainable_impact_exposure, sri_screening_crit_exposure) " +
 										  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-			pstmt.setString(1, ticker.getAttribute("innerText"));
-			pstmt.setString(2, fundName.getAttribute("innerText"));
-			pstmt.setString(3, msciEsgQualityScore.getAttribute("innerText"));
-			pstmt.setString(4, esgScorePeerRank.getAttribute("innerText"));
-			pstmt.setString(5, esgScoreGlobalRank.getAttribute("innerText"));
-			pstmt.setString(6, carbonIntensity.getAttribute("innerText"));
-			pstmt.setString(7, sustainableImpactExposure.getAttribute("innerText"));
-			pstmt.setString(8, sriScreeningCriteriaExposure.getAttribute("innerText"));
+			for (int i = 0; i < fields.size(); i++) {
+				pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+			}
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
