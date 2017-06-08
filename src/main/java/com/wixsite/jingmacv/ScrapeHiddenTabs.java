@@ -41,7 +41,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 			// Loops over the pages.
 			while (true) {
 				System.out.println("Page: " + ++count);
-				savePageData("#quicktabs-tabpage-tabs-" + 3 + " tbody tr");
+				savePageData("#quicktabs-tabpage-tabs-" + 4 + " tbody tr");
 				if (driver.findElements(By.cssSelector(".nextPageActive")).size() == 0)
 					break;
 				clickNextPage();
@@ -72,12 +72,10 @@ public class ScrapeHiddenTabs extends WebScraper {
 				//saveAnalysisRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-3 tbody tr")) {
-				saveFundamentalsRow(fields);
+				//saveFundamentalsRow(fields);
 			}
 			else if (css.equals("#quicktabs-tabpage-tabs-4 #classificationScrollContainer tbody tr")) {
-//				saveClassificationRow(fields.get(1), fields.get(0), fields.get(2), fields.get(3), fields.get(4), fields.get(5), 
-//									  fields.get(6), fields.get(7), fields.get(8), fields.get(9), fields.get(10), fields.get(11),
-//									  fields.get(12), fields.get(13), fields.get(14), fields.get(15), fields.get(16));
+				saveClassificationRow(fields);
 			}			
 			else if (css.equals("#quicktabs-tabpage-tabs-5 tbody tr")) {
 				//saveTaxRow(fields.get(0), fields.get(1), fields.get(2), fields.get(3), fields.get(4), fields.get(5));
@@ -165,7 +163,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
 										  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			int fieldIndex = 1;
-			for (int i = 0; i < fields.size(); i++) {
+			// fields.size() - 1 is for the extra field in the List that contains "".
+			for (int i = 0; i < fields.size() - 1; i++) {
 				if (i == 5)
 					continue;
 				// If the value is not a float, null gets saved in the database instead.
@@ -187,34 +186,22 @@ public class ScrapeHiddenTabs extends WebScraper {
 	/*
 	 * Saves a row to the wsc_classification table.
 	 */
-	private static void saveClassificationRow(WebElement ticker, WebElement fundName, WebElement assetClass, WebElement strategy, 
-											  WebElement region, WebElement geography, WebElement category, WebElement focus,
-											  WebElement niche, WebElement inverse, WebElement leveraged, WebElement etn,
-											  WebElement underlyingIndex, WebElement indexProvider, WebElement selectionCriteria, 
-											  WebElement weightingScheme, WebElement activePerSec) {
+	private static void saveClassificationRow(List<WebElement> fields) {
 		DBUtil.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_classification (ticker, fund_name, asset_class, strategy, region, " + 
 					  					  "geography, category, focus, niche, inverse, leveraged, etn, underlying_index, " +
 					  					  "index_provider, selection_criteria, weighting_scheme, active_per_sec) " +
 										  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			pstmt.setString(1, ticker.getAttribute("innerText"));
-			pstmt.setString(2, fundName.getAttribute("innerText"));
-			pstmt.setString(3, assetClass.getAttribute("innerText"));
-			pstmt.setString(4, strategy.getAttribute("innerText"));
-			pstmt.setString(5, region.getAttribute("innerText"));
-			pstmt.setString(6, geography.getAttribute("innerText"));
-			pstmt.setString(7, category.getAttribute("innerText"));
-			pstmt.setString(8, focus.getAttribute("innerText"));
-			pstmt.setString(9, niche.getAttribute("innerText"));
-			pstmt.setString(10, inverse.getAttribute("innerText"));
-			pstmt.setString(11, leveraged.getAttribute("innerText"));
-			pstmt.setString(12, etn.getAttribute("innerText"));
-			pstmt.setString(13, underlyingIndex.getAttribute("innerText"));
-			pstmt.setString(14, indexProvider.getAttribute("innerText"));
-			pstmt.setString(15, selectionCriteria.getAttribute("innerText"));
-			pstmt.setString(16, weightingScheme.getAttribute("innerText"));
-			pstmt.setString(17, activePerSec.getAttribute("innerText"));
+			for (int i = 0; i < fields.size(); i++) {
+				// The first two fields are switched around to match database columns.
+				if (i == 0)
+					pstmt.setString(i + 1, fields.get(1).getAttribute("innerText"));
+				else if (i == 1)
+					pstmt.setString(i + 1, fields.get(0).getAttribute("innerText"));
+				else
+					pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+			}
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
