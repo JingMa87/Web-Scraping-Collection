@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
  * This class deals with clicking a hidden object. 
  * To click, you need to use a JavascriptExecutor class.
  */
-public class ClickHiddenObjects extends WebScraper {
+public class ClickHiddenObjects extends WebScraperOracle {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.

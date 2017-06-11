@@ -1,0 +1,11 @@
+CREATE TABLE wsc_fundamentals (
+    ticker text,
+    fund_name text,
+    credit_quality text,
+    dividend_yield text,
+    duration float,
+    pb text,
+    pe text,
+    ytm text,
+    PRIMARY KEY (ticker, fund_name)
+);

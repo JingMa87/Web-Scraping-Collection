@@ -1,36 +1,38 @@
 package com.wixsite.jingmacv;
 
-import java.sql.SQLException;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import com.datastax.driver.core.LocalDate;
 
-public class Test extends WebScraper {
+public class Test extends WebScraperCassandra {
 
 	public static void main(String[] args) {
-		init("http://www.etf.com/channels/bond-etfs");
-		List<WebElement> rows = driver.findElements(By.cssSelector("#quicktabs-tabpage-tabs-4 #classificationScrollContainer tbody tr"));
-		for (WebElement row : rows) {
-			List<WebElement> fields = row.findElements(By.tagName("td"));
-			for (WebElement field : fields) {
-				System.out.println(field.getAttribute("innerText"));
-			}
+		DBUtilCassandra.initConnection();
+		prepared = session.prepare("INSERT INTO wsc_performance (ticker, fund_name, one_month, three_month, one_year, " + 
+										  "five_year, ten_year, as_of) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		bound = prepared.bind();
+		for (int i = 0; i < 8; i++) {
+			if (i == 7)
+				bound.setDate(i, toDate("06/08/2017"));
+			else
+				bound.setString(i, "test" + i);
 		}
-		driver.close();
-		
-//		DBUtil.initConnection();
-//		try {
-//			pstmt = conn.prepareStatement("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
-//					  "grade, e, t, f) VALUES ('test', null, null, null, null, null, null, ?)");
-//			pstmt.setInt(1, Integer.parseInt("0"));
-//		} catch (NumberFormatException e) {
-//			e.printStackTrace();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			DBUtil.close(pstmt);
-//			DBUtil.close(conn);
-//		}
+		session.execute(bound);
+		DBUtilCassandra.closeAll();
+	}
+	
+	private static LocalDate toDate(String inputDate) {
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        Date date = null;
+		try {
+			date = df.parse(inputDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		LocalDate localDate = LocalDate.fromMillisSinceEpoch(date.getTime());
+        return localDate;
 	}
 }

@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
  * This class deals with data on hidden tabs. 
  * To scrape hidden data, you need to use the .getAttribute("innerText") or .getAttribute("textContent") method.
  */
-public class ScrapeHiddenTabs extends WebScraper {
+public class ScrapeHiddenTabsOracle extends WebScraperOracle {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.
@@ -59,7 +59,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	public static void resetTable(int tableIndex) {
 		// Deletes all data from the table.
 		try {
-			DBUtil.initConnection();
+			DBUtilOracle.initConnection();
 			stmt = conn.createStatement();
 			if (tableIndex == 0)
 				stmt.executeQuery("DELETE FROM wsc_fund_basics");
@@ -79,8 +79,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 			e.printStackTrace();
 		} finally {
 	    	// Closes all transaction objects.
-		    DBUtil.close(stmt);
-		    DBUtil.close(conn);
+		    DBUtilOracle.close(stmt);
+		    DBUtilOracle.close(conn);
 	    }
 	}
 	
@@ -124,7 +124,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 * Saves a row to the wsc_fund_basics table.
 	 */
 	private static void saveFundBasicsRow(List<WebElement> fields) {
-		DBUtil.initConnection();
+		DBUtilOracle.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_fund_basics (ticker, fund_name, issuer, " + 
 										  "expense_ratio, aum, spread, segment) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -135,8 +135,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			DBUtilOracle.close(pstmt);
+			DBUtilOracle.close(conn);
 		}		
 	}
 	
@@ -144,7 +144,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 * Saves a row to the wsc_performance table.
 	 */
 	private static void savePerformanceRow(List<WebElement> fields) {
-		DBUtil.initConnection();
+		DBUtilOracle.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_performance (ticker, fund_name, one_month, three_month, one_year, " + 
 										  "five_year, ten_year, as_of) VALUES (?, ?, ?, ?, ?, ?, ?, to_date(?, 'MM/dd/yyyy'))");
@@ -155,8 +155,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			DBUtilOracle.close(pstmt);
+			DBUtilOracle.close(conn);
 		}
 	}
 	
@@ -164,7 +164,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 * Saves a row to the wsc_analysis table.
 	 */
 	private static void saveAnalysisRow(List<WebElement> fields) {
-		DBUtil.initConnection();
+		DBUtilOracle.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
 										  "grade, e, t, f) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -183,8 +183,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} finally {
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			DBUtilOracle.close(pstmt);
+			DBUtilOracle.close(conn);
 		}
 	}
 	
@@ -192,7 +192,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 * Saves a row to the wsc_fundamentals table.
 	 */
 	private static void saveFundamentalsRow(List<WebElement> fields) {
-		DBUtil.initConnection();
+		DBUtilOracle.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
 										  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -212,8 +212,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			DBUtilOracle.close(pstmt);
+			DBUtilOracle.close(conn);
 		}
 	}
 	
@@ -221,7 +221,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 * Saves a row to the wsc_classification table.
 	 */
 	private static void saveClassificationRow(List<WebElement> fields) {
-		DBUtil.initConnection();
+		DBUtilOracle.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_classification (ticker, fund_name, asset_class, strategy, region, " + 
 					  					  "geography, category, focus, niche, inverse, leveraged, etn, underlying_index, " +
@@ -240,8 +240,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			DBUtilOracle.close(pstmt);
+			DBUtilOracle.close(conn);
 		}
 }
 	
@@ -249,7 +249,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 * Saves a row to the wsc_tax table.
 	 */
 	private static void saveTaxRow(List<WebElement> fields) {
-		DBUtil.initConnection();
+		DBUtilOracle.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_tax (ticker, fund_name, legal_structure, max_lt_capital_gains_rate, " + 
 										  "max_st_capital_gains_rate, tax_reporting) VALUES (?, ?, ?, ?, ?, ?)");
@@ -260,8 +260,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} finally {
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			DBUtilOracle.close(pstmt);
+			DBUtilOracle.close(conn);
 		}
 	}
 
@@ -269,7 +269,7 @@ public class ScrapeHiddenTabs extends WebScraper {
 	 * Saves a row to the wsc_esg table.
 	 */
 	private static void saveEsgRow(List<WebElement> fields) {
-		DBUtil.initConnection();
+		DBUtilOracle.initConnection();
 		try {
 			pstmt = conn.prepareStatement("INSERT INTO wsc_esg (ticker, fund_name, msci_esg_quality_score, " + 
 										  "esg_score_peer_rank, esg_score_global_rank, carbon_intensity, " + 
@@ -282,8 +282,8 @@ public class ScrapeHiddenTabs extends WebScraper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(pstmt);
-			DBUtil.close(conn);
+			DBUtilOracle.close(pstmt);
+			DBUtilOracle.close(conn);
 		}		
 	}
 	

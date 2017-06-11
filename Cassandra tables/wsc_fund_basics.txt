@@ -1,0 +1,10 @@
+CREATE TABLE wsc_fund_basics (
+    ticker text,
+    fund_name text,
+    aum text,
+    expense_ratio text,
+    issuer text,
+    segment text,
+    spread text,
+    PRIMARY KEY (ticker, fund_name)
+);

@@ -1,0 +1,20 @@
+CREATE TABLE wsc_classification (
+    ticker text,
+    fund_name text,
+    active_per_sec text,
+    asset_class text,
+    category text,
+    etn text,
+    focus text,
+    geography text,
+    index_provider text,
+    inverse text,
+    leveraged text,
+    niche text,
+    region text,
+    selection_criteria text,
+    strategy text,
+    underlying_index text,
+    weighting_scheme text,
+    PRIMARY KEY (ticker, fund_name)
+);

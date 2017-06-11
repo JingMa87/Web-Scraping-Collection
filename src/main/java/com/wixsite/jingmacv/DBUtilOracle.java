@@ -10,7 +10,7 @@ import java.sql.Statement;
 /*
  * This class provides database variables and methods for other classes.
  */
-public abstract class DBUtil {
+public abstract class DBUtilOracle {
 	
 	// Transaction objects.
 	public static Connection conn = null;
