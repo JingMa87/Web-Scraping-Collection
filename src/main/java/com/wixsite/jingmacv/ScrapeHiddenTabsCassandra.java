@@ -40,7 +40,7 @@ public class ScrapeHiddenTabsCassandra extends WebScraperCassandra {
 	private static void loopOverTabsAndPrintPages() {
 		DBUtilCassandra.initConnection();
 		// Loops over the tabs.
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 0; i <= 6; i++) {
 			System.out.println("Tab " + (i + 1));
 			// Removes all rows from the table.
 			resetTable(i);
@@ -181,7 +181,7 @@ public class ScrapeHiddenTabsCassandra extends WebScraperCassandra {
 				continue;
 			// If the value is not a float, null gets saved in the database instead.
 			if (fieldIndex == 5)
-				setFloatOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
+				setDoubleOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
 			else
 				bound.setString(fieldIndex, fields.get(i).getAttribute("innerText"));
 			fieldIndex++;
@@ -261,11 +261,11 @@ public class ScrapeHiddenTabsCassandra extends WebScraperCassandra {
 	}
 	
 	/*
-	 * Checks if the string is a float, otherwise sets a null value in the database.
+	 * Checks if the string is a double, otherwise sets a null value in the database.
 	 */
-	private static void setFloatOrNull(int index, String text) {
+	private static void setDoubleOrNull(int index, String text) {
 		if (NumberUtils.isCreatable(text))
-			bound.setFloat(index, Float.parseFloat(text));
+			bound.setDouble(index, Double.parseDouble(text));
 	}
 	
 	/*

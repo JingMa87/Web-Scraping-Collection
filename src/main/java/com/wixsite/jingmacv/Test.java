@@ -16,7 +16,7 @@ public class Test extends WebScraperCassandra {
 		bound = prepared.bind();
 		for (int i = 0; i < 8; i++) {
 			if (i == 7)
-				bound.setDate(i, toDate("06/08/2017"));
+				bound.setDate(i, toDate("05/18/2017"));
 			else
 				bound.setString(i, "test" + i);
 		}

@@ -3,7 +3,7 @@ CREATE TABLE wsc_fundamentals (
     fund_name text,
     credit_quality text,
     dividend_yield text,
-    duration float,
+    duration double,
     pb text,
     pe text,
     ytm text,
