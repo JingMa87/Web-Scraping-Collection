@@ -3,6 +3,7 @@ package com.wixsite.jingmacv;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ScrapeHiddenTabsCassandra extends WebScraperCassandra {
 	private static void loopOverTabsAndPrintPages() {
 		DBUtilCassandra.initConnection();
 		// Loops over the tabs.
-		for (int i = 0; i <= 6; i++) {
+		for (int i = 1; i <= 1; i++) {
 			System.out.println("Tab " + (i + 1));
 			// Removes all rows from the table.
 			resetTable(i);
@@ -242,14 +243,19 @@ public class ScrapeHiddenTabsCassandra extends WebScraperCassandra {
 	 * Converts a date string to a DataStax LocalDate type.
 	 */
 	private static LocalDate toDate(String inputDate) {
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         Date date = null;
 		try {
 			date = df.parse(inputDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return LocalDate.fromMillisSinceEpoch(date.getTime());
+		Calendar cal = Calendar.getInstance();
+	    cal.setTime(date);
+	    int year = cal.get(Calendar.YEAR);
+	    int month = cal.get(Calendar.MONTH) + 1;
+	    int day = cal.get(Calendar.DAY_OF_MONTH);
+	    return LocalDate.fromYearMonthDay(year, month, day);
 	}
 	
 	/*
