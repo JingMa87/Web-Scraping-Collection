@@ -25,7 +25,7 @@ public class XMLParser {
     	try {
     		// Builds a document object from an XML file.
     		DocumentBuilder docBuilder = docBuildFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(new File("dataFiles/Data.xml"));
+			Document doc = docBuilder.parse(new File("data files/Data.xml"));
 	        doc.getDocumentElement().normalize();
 	        // Loops over the XML nodes and prints the children.
 	        NodeList nodes = doc.getElementsByTagName("DAMSettlementPointPrice");

@@ -18,7 +18,7 @@ public class CSVParser {
 	    BufferedReader br = null;
 	    try {
 	    	// Reads the CSV file.
-	    	br = new BufferedReader(new FileReader("dataFiles/data.csv"));
+	    	br = new BufferedReader(new FileReader("data files/data.csv"));
 	        while ((line = br.readLine()) != null) {	
 	            // Splits every line into comma separated values.
 	            String[] values = line.split(",");	
