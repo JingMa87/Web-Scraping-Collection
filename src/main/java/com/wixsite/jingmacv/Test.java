@@ -35,15 +35,4 @@ public class Test extends WebScraperCassandra {
 //		session.execute(bound);
 //		DBUtilCassandra.closeAll();
 	}
-	
-	private static LocalDate toDate(String inputDate) {
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        Date date = null;
-		try {
-			date = df.parse(inputDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return LocalDate.fromMillisSinceEpoch(date.getTime());
-	}
 }
