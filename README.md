@@ -13,6 +13,9 @@ This project has medium-level difficulty and I would like to invite programmers 
 If you encounter a new scraping problem, feel free to start an issue in the Issue Tracker and discuss the problem with me.
 Creativity is the key to innovation!
 
+### Resource
+The following website is a nice resource for dealing with Selenium problems: http://www.guru99.com/selenium-tutorial.html.
+
 ---
 
 _Happy coding awesome people!_

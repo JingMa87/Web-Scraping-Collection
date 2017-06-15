@@ -41,7 +41,7 @@ public class ScrapeHiddenTabsCassandra extends WebScraperCassandra {
 	private static void loopOverTabsAndPrintPages() {
 		DBUtilCassandra.initConnection();
 		// Loops over the tabs.
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 0; i <= 6; i++) {
 			System.out.println("Tab " + (i + 1));
 			// Removes all rows from the table.
 			resetTable(i);
