@@ -26,6 +26,10 @@ public class Test extends WebScraperCassandra {
 				newPerson.awesomeness = 9000;
 			return newPerson;
 		}).collect(Collectors.toList()).forEach(newPerson -> System.out.println(newPerson));
+		
+		// Uses a .map() function to square numbers in a list.
+		List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+		nums.stream().map(n -> n * n).collect(Collectors.toList()).forEach(n -> System.out.println(n));
 	}
 	
 	public static class Person {
