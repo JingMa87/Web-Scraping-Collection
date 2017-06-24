@@ -8,7 +8,7 @@ public class Test extends WebScraperCassandra {
 
 	public static void main(String[] args) {
 		// Uses a stream and filters a list of persons using a lambda.
-		List<Person> list = Arrays.asList(new Person("Jing", 27), new Person("Jing", 30), new Person("Floris", 28));
+		List<Person> list = Arrays.asList(new Person("Jing", 27), new Person("Jing", 25), new Person("Floris", 28));
 		Person person = list.stream().filter(p -> p.name.equals("Jing") || p.age == 30).findAny().orElse(null);
 		System.out.println(person.name + " is " + person.age + " years old.");
 		
