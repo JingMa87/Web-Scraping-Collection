@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Test extends WebScraperCassandra {
+public class TestStream extends WebScraperCassandra {
 
 	public static void main(String[] args) {
 		// Uses a stream and filters a list of persons using a lambda.
