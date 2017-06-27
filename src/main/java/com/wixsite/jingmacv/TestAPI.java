@@ -11,7 +11,7 @@ public class TestAPI {
  
     public static void main(String[] args) { 
         try {
-            URL url = new URL("https://api.bmreports.com/BMRS/B1510/V1?APIKey=69qnl68twxam19w&StartDate=2014-12-31&EndDate=2014-12-31&StartTime=14:00:00 ZZ&EndTime=15:00:00 ZZ&ServiceType=xml");
+            URL url = new URL("https://api.bmreports.com/BMRS/WINDFORPK/V1?APIKey=69qnl68twxam19w&FromDate=2014-10-10&ToDate=2014-10-10&ServiceType=xml");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection(); 
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/xml");
@@ -21,7 +21,7 @@ public class TestAPI {
             }
             
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()))); 
-            String output; 
+            String output;
             System.out.println("Output from Server .... \n"); 
             while ((output = br.readLine()) != null) { 
                 System.out.println(output); 
