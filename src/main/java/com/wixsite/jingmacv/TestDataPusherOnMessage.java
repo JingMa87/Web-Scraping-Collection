@@ -14,7 +14,7 @@ import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestDataPusher {
+public class TestDataPusherOnMessage {
 
 	// --- Start of connection details
 	private static final String URL = "ssl://api.bmreports.com:61616"; // This is the connection string to the ELEXON servers
@@ -23,11 +23,11 @@ public class TestDataPusher {
 	private static final String TOPICNAME = "bmrsTopic"; // This is the topic name
 	private static final String SUBSCRIPTIONID = "subid"; // Each durable subscription needs an ID that is unique (this you create)
 	// --- End of connection details
-	private static final Logger LOGGER = LoggerFactory.getLogger(TestDataPusher.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestDataPusherOnMessage.class);
 	private Connection connection;
 	private Session session;
 	private MessageConsumer messageConsumer;
-	private static TestDataPusher subscriberPublishSubscribe;
+	private static TestDataPusherOnMessage subscriberPublishSubscribe;
 	
 	/**
 	* Generic start point.
@@ -38,7 +38,7 @@ public class TestDataPusher {
 	public static void main(String[] args) throws Exception {
 		try {
 			// Setup and connect to the queue
-			subscriberPublishSubscribe = new TestDataPusher();
+			subscriberPublishSubscribe = new TestDataPusherOnMessage();
 			subscriberPublishSubscribe.create(URL, APIKEY, CLIENTID, TOPICNAME, SUBSCRIPTIONID);
 		} catch (Exception ex) {
 			LOGGER.error(ex.getLocalizedMessage());
