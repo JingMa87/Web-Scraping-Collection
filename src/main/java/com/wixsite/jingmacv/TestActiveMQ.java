@@ -79,6 +79,7 @@ public class TestActiveMQ {
 				producer.send(message);
 
 				// Clean up
+				producer.close();
 				session.close();
 				connection.close();
 			}
