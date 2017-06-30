@@ -9,35 +9,32 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.NamingException;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestDataPusherLooping {
-
 	// --- Start of connection details
 	private static final String URL = "ssl://api.bmreports.com:61616"; // This is the connection string to the ELEXON servers
 	private static final String APIKEY = "69qnl68twxam19w"; // This is your API key from the portal
-	private static final String CLIENTID = "jing"; // This is a client name that needs to be unique (this you create)
+	private static final String CLIENTID = "jing"; // This is a client name that needs to be(this you create)
 	private static final String TOPICNAME = "bmrsTopic"; // This is the topic name
-	private static final String SUBSCRIPTIONID = "subid"; // Each durable subscription needs an ID that is unique (this you create)
+	private static final String SUBSCRIPTIONID = "subid"; // Each durable subscription needs an ID that is(this you create)
 	// --- End of connection details
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestDataPusherLooping.class);
+	private static TestDataPusherLooping consumer;
 	private Connection connection;
 	private Session session;
 	private MessageConsumer messageConsumer;
 	private boolean transacted;
 	private boolean isRunning = false;
-	private static TestDataPusherLooping consumer;
-	
+
 	/**
-	* @param args the command line arguments
-	* @throws java.lang.InterruptedException
-	*/
+	 * @param args
+	 *            the command line arguments
+	 * @throws java.lang.InterruptedException
+	 */
 	public static void main(String[] args) throws InterruptedException {
-		BasicConfigurator.configure();
 		int retryCount = 20000;
 		int count = 0;
 		consumer = new TestDataPusherLooping();
@@ -55,7 +52,7 @@ public class TestDataPusherLooping {
 			Thread.sleep(1000);
 		}
 	}
-	
+
 	public void run() throws NamingException, JMSException {
 		isRunning = true;
 		// create a Connection Factory

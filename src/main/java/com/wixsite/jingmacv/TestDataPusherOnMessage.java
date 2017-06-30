@@ -11,12 +11,10 @@ import javax.jms.Session;
 import javax.jms.Topic;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestDataPusherOnMessage {
-
 	// --- Start of connection details
 	private static final String URL = "ssl://api.bmreports.com:61616"; // This is the connection string to the ELEXON servers
 	private static final String APIKEY = "69qnl68twxam19w"; // This is your API key from the portal
@@ -29,15 +27,14 @@ public class TestDataPusherOnMessage {
 	private Session session;
 	private MessageConsumer messageConsumer;
 	private static TestDataPusherOnMessage subscriberPublishSubscribe;
-	
+
 	/**
-	* Generic start point.
-	*
-	* @param args the command line arguments
-	* @throws java.lang.Exception
-	*/
+	 * Generic start point.
+	 *
+	 * @param args the command line arguments
+	 * @throws java.lang.Exception
+	 */
 	public static void main(String[] args) throws Exception {
-		BasicConfigurator.configure();
 		try {
 			// Setup and connect to the queue
 			subscriberPublishSubscribe = new TestDataPusherOnMessage();
@@ -49,17 +46,16 @@ public class TestDataPusherOnMessage {
 			}
 		}
 	}
-	
+
 	/**
-	* This is the method that initiates the connection and sets up the
-	* JMSListener
-	*
-	* @param url - The server and connection protocol
-	* @param apikey - the api key to connect with
-	* @param clientId - Unique id for this client
-	* @param topicName - The topic to listen to
-	* @throws JMSException
-	*/
+	 * This is the method that initiates the connection and sets up the JMSListener
+	 *
+	 * @param url - The server and connection protocol
+	 * @param apikey - the api key to connect with
+	 * @param clientId - Unique id for this client
+	 * @param topicName - The topic to listen to
+	 * @throws JMSException
+	 */
 	public void create(String url, String apikey, String clientId, String topicName, String subId) throws JMSException {
 		// create a Connection Factory
 		ConnectionFactory factory = new ActiveMQConnectionFactory(apikey, apikey, url);
@@ -76,7 +72,7 @@ public class TestDataPusherOnMessage {
 			Topic topic = session.createTopic(topicName);
 			// Set up the message consumer
 			LOGGER.debug("Creating the consumer for: " + topicName);
-			//messageConsumer = session.createConsumer(topic);
+			// messageConsumer = session.createConsumer(topic);
 			messageConsumer = session.createDurableSubscriber(topic, subId);
 			// Create the listener.
 			LOGGER.debug("Setting up the listener");
@@ -89,17 +85,16 @@ public class TestDataPusherOnMessage {
 			throw exp;
 		}
 	}
-	
+
 	public void closeConnection() throws JMSException {
 		LOGGER.debug("Closing the connection");
 		connection.close();
 	}
-	
+
 	/**
 	 * This class implements a message listener for the ActiveMQ
 	 */
 	class JMSMessageListener implements MessageListener {
-		
 		@Override
 		public void onMessage(javax.jms.Message msg) {
 			try {
