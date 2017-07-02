@@ -16,7 +16,7 @@ public class TestStream extends WebScraperCassandra {
 		List<Integer> list1 = Arrays.asList(1, 2, 3);
 		List<Integer> list2 = Arrays.asList(4, 5, 6);
 		Stream.of(list1, list2).forEach(l -> {
-			l.stream().map(i -> i * i).forEach(System.out::println);
+			l.stream().map(i -> i * i).forEach(i -> System.out.print(i + " "));
 		});
 	}
 	
