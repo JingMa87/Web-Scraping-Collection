@@ -11,7 +11,7 @@ public class TestAPI {
  
     public static void main(String[] args) { 
         try {
-            URL url = new URL("https://api.bmreports.com/BMRS/WINDFORPK/V1?APIKey=69qnl68twxam19w&FromDate=2014-10-10&ToDate=2014-10-10&ServiceType=xml");
+            URL url = new URL("https://api.bmreports.com/BMRS/WINDFORPK/V1?APIKey=69qnl68twxam19w&FromDate=2017-06-28&ToDate=2017-06-28&ServiceType=xml");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection(); 
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/xml");
