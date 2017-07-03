@@ -10,6 +10,7 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.NamingException;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +31,11 @@ public class TestDataPusherLooping {
 	private boolean isRunning = false;
 
 	/**
-	 * @param args
-	 *            the command line arguments
+	 * @param args the command line arguments
 	 * @throws java.lang.InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		BasicConfigurator.configure();
 		int retryCount = 20000;
 		int count = 0;
 		consumer = new TestDataPusherLooping();
@@ -44,7 +45,7 @@ public class TestDataPusherLooping {
 			try {
 				consumer.run();
 			} catch (NamingException | JMSException ex) {
-				LOGGER.error(ex.getLocalizedMessage());
+				LOGGER.error("", ex);
 				count++;
 			} finally {
 				LOGGER.debug("Shutting down");

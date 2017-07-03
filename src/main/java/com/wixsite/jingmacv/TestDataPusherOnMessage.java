@@ -2,6 +2,7 @@ package com.wixsite.jingmacv;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -9,8 +10,10 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.Topic;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
+import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +21,9 @@ public class TestDataPusherOnMessage {
 	// --- Start of connection details
 	private static final String URL = "ssl://api.bmreports.com:61616"; // This is the connection string to the ELEXON servers
 	private static final String APIKEY = "69qnl68twxam19w"; // This is your API key from the portal
-	private static final String CLIENTID = "jing"; // This is a client name that needs to be unique (this you create)
+	private static final String CLIENTID = "jingH"; // This is a client name that needs to be unique (this you create)
 	private static final String TOPICNAME = "bmrsTopic"; // This is the topic name
-	private static final String SUBSCRIPTIONID = "subid"; // Each durable subscription needs an ID that is unique (this you create)
+	private static final String SUBSCRIPTIONID = "subidH"; // Each durable subscription needs an ID that is unique (this you create)
 	// --- End of connection details
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestDataPusherOnMessage.class);
 	private Connection connection;
@@ -35,12 +38,13 @@ public class TestDataPusherOnMessage {
 	 * @throws java.lang.Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		BasicConfigurator.configure();
 		try {
 			// Setup and connect to the queue
 			subscriberPublishSubscribe = new TestDataPusherOnMessage();
 			subscriberPublishSubscribe.create(URL, APIKEY, CLIENTID, TOPICNAME, SUBSCRIPTIONID);
 		} catch (Exception ex) {
-			LOGGER.error(ex.getLocalizedMessage());
+			LOGGER.error("", ex);
 			if (subscriberPublishSubscribe != null) {
 				subscriberPublishSubscribe.closeConnection();
 			}
