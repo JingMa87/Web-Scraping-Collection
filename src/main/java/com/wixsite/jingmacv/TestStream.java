@@ -17,6 +17,9 @@ public class TestStream extends WebScraperCassandra {
 		Stream.of(list1, list2).forEach(l -> {
 			l.stream().map(i -> i * i).forEach(i -> System.out.print(i + " "));
 		});
+		
+		System.out.println();
+		Stream<String> strm = list1.stream().map(i -> new Person("Test", i).getName());
 	}
 	
 	public static class Person {
