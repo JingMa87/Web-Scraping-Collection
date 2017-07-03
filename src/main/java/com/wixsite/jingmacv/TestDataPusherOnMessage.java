@@ -2,6 +2,7 @@ package com.wixsite.jingmacv;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -9,8 +10,10 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.Topic;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
+import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +38,13 @@ public class TestDataPusherOnMessage {
 	 * @throws java.lang.Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		BasicConfigurator.configure();
 		try {
 			// Setup and connect to the queue
 			subscriberPublishSubscribe = new TestDataPusherOnMessage();
 			subscriberPublishSubscribe.create(URL, APIKEY, CLIENTID, TOPICNAME, SUBSCRIPTIONID);
 		} catch (Exception ex) {
-			LOGGER.error(ex.getLocalizedMessage());
+			LOGGER.error("", ex);
 			if (subscriberPublishSubscribe != null) {
 				subscriberPublishSubscribe.closeConnection();
 			}
