@@ -21,9 +21,9 @@ public class TestDataPusherOnMessage {
 	// --- Start of connection details
 	private static final String URL = "ssl://api.bmreports.com:61616"; // This is the connection string to the ELEXON servers
 	private static final String APIKEY = "69qnl68twxam19w"; // This is your API key from the portal
-	private static final String CLIENTID = "jingH"; // This is a client name that needs to be unique (this you create)
+	private static final String CLIENTID = "jing"; // This is a client name that needs to be unique (this you create)
 	private static final String TOPICNAME = "bmrsTopic"; // This is the topic name
-	private static final String SUBSCRIPTIONID = "subidH"; // Each durable subscription needs an ID that is unique (this you create)
+	private static final String SUBSCRIPTIONID = "subid"; // Each durable subscription needs an ID that is unique (this you create)
 	// --- End of connection details
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestDataPusherOnMessage.class);
 	private Connection connection;
