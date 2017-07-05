@@ -2,24 +2,27 @@ package com.wixsite.jingmacv;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TestStream extends WebScraperCassandra {
 
 	public static void main(String[] args) {
-		// Uses a stream and filters a list of persons using a lambda.
+		// Uses a stream and filters a list of persons.
 		List<Person> list = Arrays.asList(new Person("Jing", 7), new Person("Rik", 25), new Person("Floris", 21));
 		Person person = list.stream().filter(p -> p.name.equals("Jason") || p.age == 20).findAny().orElse(new Person("John", 40));
 		System.out.println(person.name + " is " + person.age + " years old.");
 		
+		// Streams 2 List<Integer> and returns a Stream<Integer>.
+		System.out.println();
 		List<Integer> list1 = Arrays.asList(1, 2, 3);
 		List<Integer> list2 = Arrays.asList(4, 5, 6);
-		Stream.of(list1, list2).forEach(l -> {
-			l.stream().map(i -> i * i).forEach(i -> System.out.print(i + " "));
-		});
+		Stream<Integer> stream = Stream.of(list1, list2).map(l -> l.stream().map(i -> i * i).collect(Collectors.toList()))
+														.flatMap(l -> l.stream());
+		stream.forEach(i -> System.out.print(i + " "));
 		
-		System.out.println();
-		Stream<String> strm = list1.stream().map(i -> new Person("Person" + i, i).getName());
+		System.out.println("\n");
+		Stream<String> strm = list1.stream().map(i -> new Person("Person " + i, i).getName());
 		strm.forEach(System.out::println);
 	}
 	
