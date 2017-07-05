@@ -19,7 +19,8 @@ public class TestStream extends WebScraperCassandra {
 		});
 		
 		System.out.println();
-		Stream<String> strm = list1.stream().map(i -> new Person("Test", i).getName());
+		Stream<String> strm = list1.stream().map(i -> new Person("Person" + i, i).getName());
+		strm.forEach(System.out::println);
 	}
 	
 	public static class Person {
