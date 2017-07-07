@@ -15,7 +15,7 @@ public class ClickHiddenObjects extends WebScraperOracle {
 	public static void scrape() {
 		// Initializes web driver.
 		init("http://www.etf.com/channels/bond-etfs");
-		// Clicks the pop-up message.
+		// Closes the pop-up message.
 		driver.findElement(By.cssSelector(".popupCloseButton")).click();
 		// Clicks on the next pages and prints the tab name.
 		clickNextLoop();
