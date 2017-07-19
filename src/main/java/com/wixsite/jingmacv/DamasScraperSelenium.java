@@ -9,15 +9,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /*
  * This class scrapes Damas data on transmissions.
  */
 public class DamasScraperSelenium {
 
-	public static WebDriver driver;
-	public static WebDriverWait wait;
+	private static WebDriver driver;
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.
@@ -42,8 +40,6 @@ public class DamasScraperSelenium {
 		capabilities.setCapability("marionette", true);
 		driver = new FirefoxDriver(capabilities);
 		driver.get(url);
-		//jdriver.manage().window().maximize();
-		wait = new WebDriverWait(driver, 2000);
 	}
 
 	
