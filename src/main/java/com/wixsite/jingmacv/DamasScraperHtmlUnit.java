@@ -63,6 +63,7 @@ public class DamasScraperHtmlUnit {
 		// Clicks submit.
 		HtmlTableCell btn = page.querySelector(".tlacitko-vel2");
 		page = btn.click();
+		System.out.println(page.asXml());
 	}
 	
 	/*
