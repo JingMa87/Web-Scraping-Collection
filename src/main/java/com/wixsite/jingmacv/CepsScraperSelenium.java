@@ -38,18 +38,27 @@ public class CepsScraperSelenium {
 		//jdriver.manage().window().maximize();
 		wait = new WebDriverWait(driver, 2000);
 	}
-
 	
 	/*
 	 * Navigates to the page with the data.
 	 */
 	private static void navigateWebsite() {
-		driver.findElement(By.cssSelector("#ctl00_cphUrl_lbtPublicAccess")).click();
+		// Clicks the Public Access link.
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#ctl00_cphUrl_lbtPublicAccess"))).click();
+		// Switches to the iframe.
 		driver.switchTo().frame("frameMenu");
+		// Expands Transmission services and Views, then clicks on Intraday Allocation Capacities.
 		driver.findElement(By.cssSelector("#AjaxTreectl00_cphNavPanelContent_vcTreeNode15899800030226586ExpandIcon")).click();
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div#AjaxTreectl00_cphNavPanelContent_vcTreeNode15899800030226586InnerPanel div.NodePanel span img"))).click();
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("Intraday Allocation Capacities"))).click();
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".cntControlsBtn"))).click();
+		// Exits the current iframe and goes down into 2 iframes.
+		driver.switchTo().defaultContent();
+		driver.switchTo().frame("frameContent");
+		driver.switchTo().frame("popupMenuFrame");
+		System.out.println(wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".buttonBar"))).getAttribute("outerHTML"));
+		
+		// Clicks the Show view button.
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".cntControlsBtnsRight"))).click();
 	}
 	
 	/*
