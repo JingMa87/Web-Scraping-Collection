@@ -19,7 +19,7 @@ public class CepsScraperSelenium {
 	 */
 	public static void scrape() {
 		// Initializes web driver.
-		init("https://dae.ceps.cz/DAEF-GUI/SUC/001System/UCLogin/LoginTest.aspx"); //https://dae.ceps.cz/005TypeUC/ViewDetail/UseCaseHandler.aspx?cnreq=1tEgs/Bp8vSc4v1rSYzeAm$n4UGb/9wixaFl3t/P3yaHhGB4nbmS0bozb$jIDwEcs7xTWQoSBjwXbOX9aOIHZ4tKzjqbxHhYGLOLA3oh15kGZwlKLJjOgbEacO7UNAkfs$DV3ucQ1QPRD0NsNzc5aSA5RndUHd4JtqyLOdo21dQ=
+		init("https://dae.ceps.cz/DAEF-GUI/SUC/001System/UCLogin/LoginTest.aspx");
 		// Navigates to the page with the data.
 		navigateWebsite();
 		// Finds all the data and prints it.
