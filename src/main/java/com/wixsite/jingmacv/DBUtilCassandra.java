@@ -9,7 +9,7 @@ import com.datastax.driver.core.Session;
 /*
  * This class provides database variables and methods for other classes.
  */
-public abstract class DBUtilCassandra {
+public abstract class DBUtilCassandra extends WebScraper {
 	
 	// Transaction objects.
 	public static Cluster cluster = null;

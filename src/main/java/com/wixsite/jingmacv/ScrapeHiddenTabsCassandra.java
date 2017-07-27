@@ -19,7 +19,7 @@ import com.datastax.driver.core.LocalDate;
  * This class deals with data on hidden tabs. 
  * To scrape hidden data, you need to use the .getAttribute("innerText") or .getAttribute("textContent") method.
  */
-public class ScrapeHiddenTabsCassandra extends WebScraperCassandra {
+public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.

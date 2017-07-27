@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
  * This class deals with data on hidden tabs. 
  * To scrape hidden data, you need to use the .getAttribute("innerText") or .getAttribute("textContent") method.
  */
-public class ScrapeHiddenTabsOracle extends WebScraperOracle {
+public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.

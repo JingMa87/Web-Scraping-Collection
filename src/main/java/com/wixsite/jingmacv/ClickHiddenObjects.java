@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
  * This class deals with clicking a hidden object. 
  * To click, you need to use a JavascriptExecutor class.
  */
-public class ClickHiddenObjects extends WebScraperOracle {
+public class ClickHiddenObjects extends WebScraper {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.
@@ -25,8 +25,7 @@ public class ClickHiddenObjects extends WebScraperOracle {
 	
 	private static void clickNextLoop() {
 		// Waits one second so the user can scroll down to the table with the tabs.
-		waitOneSec();
-		
+		sleepOneSec();		
 		// Finds and prints the tab titles.
 		WebElement tab;
 		for (int i = 0; i <= 6; i++) {
@@ -35,14 +34,14 @@ public class ClickHiddenObjects extends WebScraperOracle {
 				js.executeScript("arguments[0].click();", tab);
 			System.out.println(tab.getText());			
 			// Waits one second between the iterations so the user can see the clicks.
-			waitOneSec();
+			sleepOneSec();
 		}
 	}
 	
 	/*
 	 * Waits one second.
 	 */
-	private static void waitOneSec() {
+	private static void sleepOneSec() {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {

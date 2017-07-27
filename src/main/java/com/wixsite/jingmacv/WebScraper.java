@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public abstract class WebScraperCassandra extends DBUtilCassandra {
+public abstract class WebScraper {
 
 	public static WebDriver driver;
 	public static WebDriverWait wait;
