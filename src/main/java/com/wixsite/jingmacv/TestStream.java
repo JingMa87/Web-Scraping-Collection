@@ -1,5 +1,6 @@
 package com.wixsite.jingmacv;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,7 +8,7 @@ import java.util.stream.Stream;
 
 public class TestStream extends WebScraper {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// Uses a stream and filters a list of persons.
 		List<Person> list = Arrays.asList(new Person("Jing", 7), new Person("Rik", 25), new Person("Floris", 21));
 		Person person = list.stream().filter(p -> p.name.equals("Jason") || p.age == 20).findAny().orElse(new Person("John", 40));
