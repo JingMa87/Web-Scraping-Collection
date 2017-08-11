@@ -18,13 +18,8 @@ public class TestStream extends WebScraper {
 		System.out.println();
 		List<Integer> list1 = Arrays.asList(1, 2, 3);
 		List<Integer> list2 = Arrays.asList(4, 5, 6);
-		Stream<Integer> stream = Stream.of(list1, list2).map(l -> l.stream().map(i -> i * i).collect(Collectors.toList()))
-														.flatMap(l -> l.stream());
+		Stream<Integer> stream = Stream.of(list1, list2).map(l -> l.stream().map(i -> i * i).collect(Collectors.toList())).flatMap(l -> l.stream());
 		stream.forEach(i -> System.out.print(i + " "));
-		
-		System.out.println("\n");
-		Stream<String> strm = list1.stream().map(i -> new Person("Person " + i, i).getName());
-		strm.forEach(System.out::println);
 	}
 	
 	public static class Person {

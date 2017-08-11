@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.Screen;
 
 /*
  * This class scrapes Damas data on transmissions.
@@ -35,8 +37,26 @@ public class CepsScraperSelenium {
 		System.setProperty("webdriver.ie.driver", "C:\\Program Files (x86)\\IEDriverServer_Win32_3.4.0\\IEDriverServer.exe");
 		driver = new InternetExplorerDriver();
 		driver.get(url);
-		//jdriver.manage().window().maximize();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		handleSecurityWindow();
+		//driver.manage().window().maximize();
 		wait = new WebDriverWait(driver, 2000);
+	}
+
+	/*
+	 * Handles the Windows Security window.
+	 */
+	private static void handleSecurityWindow() {
+		Screen scr = new Screen();
+		try {
+			scr.click("Sikuli/scraper.png");
+		} catch(FindFailed e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/*
