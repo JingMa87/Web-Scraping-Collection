@@ -19,7 +19,7 @@ public class TestStream extends WebScraper {
 		List<Integer> list1 = Arrays.asList(1, 2, 3);
 		List<Integer> list2 = Arrays.asList(4, 5, 6);
 		Stream<Integer> stream = Stream.of(list1, list2).map(l -> l.stream().map(i -> i * i).collect(Collectors.toList())).flatMap(l -> l.stream());
-		stream.forEach(i -> System.out.print(i + " "));		
+		stream.forEach(i -> System.out.print(i + " "));
 	}
 	
 	public static class Person {
