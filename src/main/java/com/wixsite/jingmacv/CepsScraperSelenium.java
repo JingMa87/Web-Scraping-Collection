@@ -8,9 +8,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.Screen;
 
-/*
- * This class scrapes Damas data on transmissions.
- */
 public class CepsScraperSelenium {
 
 	public static WebDriver driver;
