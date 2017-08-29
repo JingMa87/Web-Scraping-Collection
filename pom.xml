@@ -1,18 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
   	<modelVersion>4.0.0</modelVersion>
   	<groupId>com.wixsite.jingmacv</groupId>
   	<artifactId>WebScrapingCollection</artifactId>
   	<version>0.0.1-SNAPSHOT</version>
   	<name>Web Scraping Collection</name>
 
-  	<dependencies>
-  		<dependency>
-		    <groupId>org.sikuli</groupId>
-		    <artifactId>sikuli-api</artifactId>
-		    <version>1.2.0</version>
-		</dependency>  		 
+  	<dependencies> 		 
   		<dependency>
     		<groupId>org.seleniumhq.selenium</groupId>
     		<artifactId>selenium-java</artifactId>
@@ -34,6 +28,11 @@
     		<version>3.2.0</version>
 		</dependency>		
 		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-core</artifactId>
+		    <version>5.7.0</version>
+		</dependency>   		
+   		<dependency>
        		<groupId>org.slf4j</groupId>
        		<artifactId>slf4j-api</artifactId>
        		<version>1.7.5</version>
@@ -42,11 +41,6 @@
        		<groupId>org.slf4j</groupId>
        		<artifactId>slf4j-log4j12</artifactId>
        		<version>1.7.5</version>
-   		</dependency>		
-		<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-core</artifactId>
-		    <version>5.7.0</version>
-		</dependency>		
+   		</dependency>	
   	</dependencies>
 </project>
