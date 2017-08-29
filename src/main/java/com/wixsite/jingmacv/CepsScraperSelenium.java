@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.Screen;
 
 public class CepsScraperSelenium {
 
@@ -46,7 +48,12 @@ public class CepsScraperSelenium {
 	 * Handles the Windows Security window.
 	 */
 	private static void handleSecurityWindow() {
-		
+		Screen scr = new Screen();
+		try {
+			scr.click("Sikuli/scraper.png");
+		} catch(FindFailed e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/*
