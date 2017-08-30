@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
+
 public class TestStream extends WebScraper {
+	
+	private final static Logger log = Logger.getLogger(TestStream.class);
 
 	public static void main(String[] args) throws IOException {
 		// Uses a stream and filters a list of persons.
@@ -20,6 +24,13 @@ public class TestStream extends WebScraper {
 		List<Integer> list2 = Arrays.asList(4, 5, 6);
 		Stream<Integer> stream = Stream.of(list1, list2).map(l -> l.stream().map(i -> i * i).collect(Collectors.toList())).flatMap(l -> l.stream());
 		stream.forEach(i -> System.out.print(i + " "));
+		System.out.println();
+		
+		log.info("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log.info("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log.info("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log.info("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		
 	}
 	
 	public static class Person {
