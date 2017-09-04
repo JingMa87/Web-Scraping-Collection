@@ -2,18 +2,29 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration debug="true" xmlns:log4j='http://jakarta.apache.org/log4j/'>
-	<appender name="file" class="org.apache.log4j.RollingFileAppender">
+	<appender name="file1" class="org.apache.log4j.FileAppender">
+	   <param name="threshold" value="info" />
 	   <param name="append" value="true" />
-	   <param name="maxFileSize" value="4KB" />
-	   <param name="maxBackupIndex" value="1" />
-	   <param name="file" value="TestStream.log" />
+	   <param name="file" value="src/main/resources/logging/TestStream.log" />
+	   <layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+	   </layout>
+	</appender>
+	<appender name="file2" class="org.apache.log4j.FileAppender">
+	   <param name="threshold" value="info" />
+	   <param name="append" value="true" />
+	   <param name="file" value="src/main/resources/logging/TestStream2.log" />
 	   <layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
 	   </layout>
 	</appender>
 
-	<root>
-		<level value="DEBUG" />
-		<appender-ref ref="file" />
-	</root>
+    <logger name="logger1" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="file1" />
+    </logger>
+    <logger name="logger2" additivity="false">
+        <level value="debug" />
+		<appender-ref ref="file2" />
+    </logger>
 </log4j:configuration>

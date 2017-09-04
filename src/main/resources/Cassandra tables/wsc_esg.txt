@@ -1,0 +1,11 @@
+CREATE TABLE wsc_esg (
+    ticker text,
+    fund_name text,
+    carbon_intensity text,
+    esg_score_global_rank text,
+    esg_score_peer_rank text,
+    msci_esg_quality_score text,
+    sri_screening_crit_exposure text,
+    sustainable_impact_exposure text,
+    PRIMARY KEY (ticker, fund_name)
+);

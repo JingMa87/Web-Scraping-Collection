@@ -1,9 +1,0 @@
-CREATE TABLE wsc_tax (
-    ticker text,
-    fund_name text,
-    legal_structure text,
-    max_lt_capital_gains_rate text,
-    max_st_capital_gains_rate text,
-    tax_reporting text,
-    PRIMARY KEY (ticker, fund_name)
-);

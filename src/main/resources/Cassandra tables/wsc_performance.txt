@@ -1,0 +1,11 @@
+CREATE TABLE wsc_performance (
+    ticker text,
+    fund_name text,
+    as_of date,
+    five_year text,
+    one_month text,
+    one_year text,
+    ten_year text,
+    three_month text,
+    PRIMARY KEY (ticker, fund_name)
+);
