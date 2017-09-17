@@ -34,6 +34,7 @@ public class TestStream extends WebScraper {
 		log2.warn("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		log2.fatal("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		
+		
 	}
 	
 	public static class Person {
