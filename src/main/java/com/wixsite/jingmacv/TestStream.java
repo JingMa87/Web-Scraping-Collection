@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TestStream extends WebScraper {
 	
-	private final static Logger log1 = Logger.getLogger("logger1");
-	private final static Logger log2 = Logger.getLogger("logger2");
+	private final static Logger log1 = LogManager.getLogger("Logger 1");
 
 	public static void main(String[] args) throws IOException {
 		// Uses a stream and filters a list of persons.
@@ -30,9 +30,6 @@ public class TestStream extends WebScraper {
 		log1.error("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		log1.warn("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		log1.fatal("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
-		log2.error("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
-		log2.warn("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
-		log2.fatal("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		
 		
 	}
