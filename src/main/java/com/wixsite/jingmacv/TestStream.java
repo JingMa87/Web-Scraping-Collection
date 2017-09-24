@@ -11,7 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 public class TestStream extends WebScraper {
 	
-	private final static Logger log1 = LogManager.getLogger("Logger 1");
+	private final static Logger log1 = LogManager.getLogger("Logger1");
+	private final static Logger log2 = LogManager.getLogger("Logger2");
 
 	public static void main(String[] args) throws IOException {
 		// Uses a stream and filters a list of persons.
@@ -27,9 +28,12 @@ public class TestStream extends WebScraper {
 		stream.forEach(i -> System.out.print(i + " "));
 		System.out.println();
 
-		log1.error("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
-		log1.warn("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
-		log1.fatal("INFO LOG! THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log1.error("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log1.warn("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log1.fatal("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log2.error("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log2.warn("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
+		log2.fatal("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		
 		
 	}
