@@ -15,15 +15,15 @@
         </File>
     </Appenders>
     <Loggers>
-        <Root level="DEBUG">
+        <Root level="INFO">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="MyFile"/>
+            <AppenderRef ref="File1"/>
         </Root>
-		    <Logger name="Logger1" level="INFO" additivity="true">
-		        <appender-ref ref="File1" level="debug"/>
-		    </Logger>
-		    <Logger name="Logger2" level="INFO" additivity="true">       
-		        <appender-ref ref="File2" level="debug"/>
-		    </Logger>
+	    <Logger name="Logger1" level="INFO" additivity="true">
+	        <appender-ref ref="File1" level="debug"/>
+	    </Logger>
+	    <Logger name="Logger2" level="INFO" additivity="true">       
+	        <appender-ref ref="File2" level="debug"/>
+	    </Logger>
     </Loggers>
 </Configuration>
