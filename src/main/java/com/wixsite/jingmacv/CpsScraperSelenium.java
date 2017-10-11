@@ -29,7 +29,7 @@ public class CpsScraperSelenium {
 	 * Initializes a Internet Explorer web driver that represents a website DOM. 
 	 */
 	private static void init(String url) {
-		System.setProperty("webdriver.ie.driver", "browser drivers\\IEDriverServer.exe");
+		System.setProperty("webdriver.ie.driver", "src\\main\\resources\\browser drivers\\IEDriverServer.exe");
 		driver = new InternetExplorerDriver();
 		driver.get(url);
 		try {
