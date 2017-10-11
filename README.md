@@ -1,6 +1,6 @@
 # README
 
-<img src="https://github.com/JingMa87/Web-Scraping-Collection/blob/master/img/Octocat%20ninja.jpg" width="400">
+<img src="https://github.com/JingMa87/Web-Scraping-Collection/tree/master/src/main/resources/images/Octocat%20ninja.jpg" width="400">
 
 This is a web scraping project that I'm working on using Java, Maven and Selenium. 
 It's a collection of Java classes that each deal with a problem when scraping websites or files.
