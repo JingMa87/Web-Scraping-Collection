@@ -1,5 +1,6 @@
 package com.wixsite.jingmacv;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +36,9 @@ public class TestStream extends WebScraper {
 		log2.warn("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		log2.fatal("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		
-		
+		File f = new File("/src/main/resources/logging/folder-File1.log");
+		String absPath = f.getAbsolutePath();
+		System.out.println(absPath.substring(0, absPath.lastIndexOf("\\") + 1) + f.getName().split("-")[1]);
 	}
 	
 	public static class Person {
