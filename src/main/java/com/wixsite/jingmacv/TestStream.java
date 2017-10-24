@@ -19,5 +19,7 @@ public class TestStream extends WebScraper {
 		File f = new File("/src/main/resources/logging/folder-File1.log");
 		String absPath = f.getAbsolutePath();
 		System.out.println(absPath.substring(0, absPath.lastIndexOf("\\") + 1) + f.getName().split("-")[1]);
+		
+		
 	}
 }
