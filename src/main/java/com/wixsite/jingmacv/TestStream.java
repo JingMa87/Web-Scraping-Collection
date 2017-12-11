@@ -1,8 +1,5 @@
 package com.wixsite.jingmacv;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,15 +14,6 @@ public class TestStream extends WebScraper {
 //		log2.error("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 //		log2.warn("THIS IS TO FILL THE DOCUMENT UNTIL ITS FULL AHAHA");
 		
-		File f = new File("/src/main/resources/logging/folder-File1.log");
-		String absPath = f.getAbsolutePath();
-		System.out.println(absPath.substring(0, absPath.lastIndexOf("\\") + 1) + f.getName().split("-")[1]);
 		
-		File file = new File("W:/Trading/test.txt");
-		try {
-			file.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }
