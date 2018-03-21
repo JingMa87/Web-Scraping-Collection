@@ -1,9 +1,8 @@
 package com.wixsite.jingmacv;
 
-public class Test extends WebScraper {
+public class Test {
 
 	public static void main(String[] args) {
-		
 		
 	}
 }
