@@ -1,4 +1,4 @@
-package com.wixsite.jingmacv;
+package com.wixsite.jingmacv.scrapers;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;

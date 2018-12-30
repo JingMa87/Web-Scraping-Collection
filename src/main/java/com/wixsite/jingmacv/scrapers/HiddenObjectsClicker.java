@@ -1,4 +1,4 @@
-package com.wixsite.jingmacv;
+package com.wixsite.jingmacv.scrapers;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
  * This class deals with clicking a hidden object. 
  * To click, you need to use a JavascriptExecutor class.
  */
-public class ClickHiddenObjects extends WebScraper {
+public class HiddenObjectsClicker extends WebScraper {
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.

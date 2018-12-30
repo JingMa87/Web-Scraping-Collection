@@ -1,4 +1,4 @@
-package com.wixsite.jingmacv;
+package com.wixsite.jingmacv.scrapers;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -6,7 +6,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CpsScraperSelenium {
+public class CpsSeleniumScraper {
 
 	public static WebDriver driver;
 	public static WebDriverWait wait;

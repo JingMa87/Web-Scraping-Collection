@@ -1,4 +1,4 @@
-package com.wixsite.jingmacv;
+package com.wixsite.jingmacv.scrapers;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,12 +14,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.datastax.driver.core.LocalDate;
+import com.wixsite.jingmacv.dao.CassandraDao;
 
 /*
  * This class deals with data on hidden tabs. 
  * To scrape hidden data, you need to use the .getAttribute("innerText") or .getAttribute("textContent") method.
  */
-public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
+public class HiddenTabsCassandraScraper extends WebScraper {
+	
+	private static final CassandraDao cassandraDao = new CassandraDao();
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.
@@ -39,7 +42,6 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 	 * Loops over all the hidden tabs and prints all the pages per tab.
 	 */
 	private static void loopOverTabsAndPrintPages() {
-		DBUtilCassandra.initConnection();
 		// Loops over the tabs.
 		for (int i = 0; i <= 6; i++) {
 			System.out.println("Tab " + (i + 1));
@@ -57,8 +59,8 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 			}
 			resetPage();
 		}
-		// Closes the session and cluster objects.
-		DBUtilCassandra.closeAll();
+		// Closes the cassandraDao.getSession() and cluster objects.
+		cassandraDao.closeAll();
 	}
 	
 	/*
@@ -67,19 +69,19 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 	public static void resetTable(int tableIndex) {
 		// Deletes all data from the table.
 		if (tableIndex == 0)
-			session.execute("TRUNCATE wsc_fund_basics");
+			cassandraDao.getSession().execute("TRUNCATE wsc_fund_basics");
 		else if (tableIndex == 1)
-			session.execute("TRUNCATE wsc_performance");
+			cassandraDao.getSession().execute("TRUNCATE wsc_performance");
 		else if (tableIndex == 2)
-			session.execute("TRUNCATE wsc_analysis");
+			cassandraDao.getSession().execute("TRUNCATE wsc_analysis");
 		else if (tableIndex == 3)
-			session.execute("TRUNCATE wsc_fundamentals");
+			cassandraDao.getSession().execute("TRUNCATE wsc_fundamentals");
 		else if (tableIndex == 4)
-			session.execute("TRUNCATE wsc_classification");
+			cassandraDao.getSession().execute("TRUNCATE wsc_classification");
 		else if (tableIndex == 5)
-			session.execute("TRUNCATE wsc_tax");
+			cassandraDao.getSession().execute("TRUNCATE wsc_tax");
 		else if (tableIndex == 6)
-			session.execute("TRUNCATE wsc_esg");
+			cassandraDao.getSession().execute("TRUNCATE wsc_esg");
 	}
 	
 	/*
@@ -122,38 +124,38 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 	 * Saves a row to the wsc_fund_basics table.
 	 */
 	private static void saveFundBasicsRow(List<WebElement> fields) {
-		prepared = session.prepare("INSERT INTO wsc_fund_basics (ticker, fund_name, issuer, " + 
-									  "expense_ratio, aum, spread, segment) VALUES (?, ?, ?, ?, ?, ?, ?)");
-		bound = prepared.bind();
+		cassandraDao.setPrepared(cassandraDao.getSession().prepare("INSERT INTO wsc_fund_basics (ticker, fund_name, issuer, " + 
+									  "expense_ratio, aum, spread, segment) VALUES (?, ?, ?, ?, ?, ?, ?)"));
+		cassandraDao.setBound(cassandraDao.getPrepared().bind());
 		for (int i = 0; i < fields.size(); i++) {
-			bound.setString(i, fields.get(i).getAttribute("innerText"));
+			cassandraDao.getBound().setString(i, fields.get(i).getAttribute("innerText"));
 		}
-		session.execute(bound);
+		cassandraDao.getSession().execute(cassandraDao.getBound());
 	}
 	
 	/*
 	 * Saves a row to the wsc_performance table.
 	 */
 	private static void savePerformanceRow(List<WebElement> fields) {
-		prepared = session.prepare("INSERT INTO wsc_performance (ticker, fund_name, one_month, three_month, one_year, " + 
-										  "five_year, ten_year, as_of) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-		bound = prepared.bind();
+		cassandraDao.setPrepared(cassandraDao.getSession().prepare("INSERT INTO wsc_performance (ticker, fund_name, one_month, three_month, one_year, " + 
+										  "five_year, ten_year, as_of) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+		cassandraDao.setBound(cassandraDao.getPrepared().bind());
 		for (int i = 0; i < fields.size(); i++) {
 			if (i == 7)
-				bound.setDate(i, toDate(fields.get(i).getAttribute("innerText")));
+				cassandraDao.getBound().setDate(i, toDate(fields.get(i).getAttribute("innerText")));
 			else
-				bound.setString(i, fields.get(i).getAttribute("innerText"));
+				cassandraDao.getBound().setString(i, fields.get(i).getAttribute("innerText"));
 		}
-		session.execute(bound);
+		cassandraDao.getSession().execute(cassandraDao.getBound());
 	}
 	
 	/*
 	 * Saves a row to the wsc_analysis table.
 	 */
 	private static void saveAnalysisRow(List<WebElement> fields) {
-		prepared = session.prepare("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
-									  "grade, e, t, f) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-		bound = prepared.bind();
+		cassandraDao.setPrepared(cassandraDao.getSession().prepare("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
+									  "grade, e, t, f) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+		cassandraDao.setBound(cassandraDao.getPrepared().bind());
 		int fieldIndex = 0;
 		for (int i = 0; i < fields.size(); i++) {
 			if (i == 4)
@@ -162,19 +164,19 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 			if (fieldIndex == 5 || fieldIndex == 6 || fieldIndex == 7)
 				setIntOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
 			else
-				bound.setString(fieldIndex, fields.get(i).getAttribute("innerText"));
+				cassandraDao.getBound().setString(fieldIndex, fields.get(i).getAttribute("innerText"));
 			fieldIndex++;
 		}
-		session.execute(bound);
+		cassandraDao.getSession().execute(cassandraDao.getBound());
 	}
 	
 	/*
 	 * Saves a row to the wsc_fundamentals table.
 	 */
 	private static void saveFundamentalsRow(List<WebElement> fields) {
-		prepared = session.prepare("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
-									  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-		bound = prepared.bind();
+		cassandraDao.setPrepared(cassandraDao.getSession().prepare("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
+									  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+		cassandraDao.setBound(cassandraDao.getPrepared().bind());
 		int fieldIndex = 0;
 		// fields.size() - 1 is for the extra field in the List that contains "".
 		for (int i = 0; i < fields.size() - 1; i++) {
@@ -184,59 +186,59 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 			if (fieldIndex == 5)
 				setDoubleOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
 			else
-				bound.setString(fieldIndex, fields.get(i).getAttribute("innerText"));
+				cassandraDao.getBound().setString(fieldIndex, fields.get(i).getAttribute("innerText"));
 			fieldIndex++;
 		}
-		session.execute(bound);
+		cassandraDao.getSession().execute(cassandraDao.getBound());
 	}
 	
 	/*
 	 * Saves a row to the wsc_classification table.
 	 */
 	private static void saveClassificationRow(List<WebElement> fields) {
-		prepared = session.prepare("INSERT INTO wsc_classification (ticker, fund_name, asset_class, strategy, region, " + 
+		cassandraDao.setPrepared(cassandraDao.getSession().prepare("INSERT INTO wsc_classification (ticker, fund_name, asset_class, strategy, region, " + 
 				  					  "geography, category, focus, niche, inverse, leveraged, etn, underlying_index, " +
 				  					  "index_provider, selection_criteria, weighting_scheme, active_per_sec) " +
-									  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		bound = prepared.bind();
+									  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+		cassandraDao.setBound(cassandraDao.getPrepared().bind());
 		for (int i = 0; i < fields.size(); i++) {
 			// The first two fields are switched around to match database columns.
 			if (i == 0)
-				bound.setString(i, fields.get(1).getAttribute("innerText"));
+				cassandraDao.getBound().setString(i, fields.get(1).getAttribute("innerText"));
 			else if (i == 1)
-				bound.setString(i, fields.get(0).getAttribute("innerText"));
+				cassandraDao.getBound().setString(i, fields.get(0).getAttribute("innerText"));
 			else
-				bound.setString(i, fields.get(i).getAttribute("innerText"));
+				cassandraDao.getBound().setString(i, fields.get(i).getAttribute("innerText"));
 		}
-		session.execute(bound);
+		cassandraDao.getSession().execute(cassandraDao.getBound());
 }
 	
 	/*
 	 * Saves a row to the wsc_tax table.
 	 */
 	private static void saveTaxRow(List<WebElement> fields) {
-		prepared = session.prepare("INSERT INTO wsc_tax (ticker, fund_name, legal_structure, max_lt_capital_gains_rate, " + 
-									  "max_st_capital_gains_rate, tax_reporting) VALUES (?, ?, ?, ?, ?, ?)");
-		bound = prepared.bind();
+		cassandraDao.setPrepared(cassandraDao.getSession().prepare("INSERT INTO wsc_tax (ticker, fund_name, legal_structure, max_lt_capital_gains_rate, " + 
+									  "max_st_capital_gains_rate, tax_reporting) VALUES (?, ?, ?, ?, ?, ?)"));
+		cassandraDao.setBound(cassandraDao.getPrepared().bind());
 		for (int i = 0; i < fields.size(); i++) {
-			bound.setString(i, fields.get(i).getAttribute("innerText"));
+			cassandraDao.getBound().setString(i, fields.get(i).getAttribute("innerText"));
 		}
-		session.execute(bound);
+		cassandraDao.getSession().execute(cassandraDao.getBound());
 	}
 
 	/*
 	 * Saves a row to the wsc_esg table.
 	 */
 	private static void saveEsgRow(List<WebElement> fields) {
-		prepared = session.prepare("INSERT INTO wsc_esg (ticker, fund_name, msci_esg_quality_score, " + 
+		cassandraDao.setPrepared(cassandraDao.getSession().prepare("INSERT INTO wsc_esg (ticker, fund_name, msci_esg_quality_score, " + 
 									  "esg_score_peer_rank, esg_score_global_rank, carbon_intensity, " + 
 									  "sustainable_impact_exposure, sri_screening_crit_exposure) " +
-									  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-		bound = prepared.bind();
+									  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
+		cassandraDao.setBound(cassandraDao.getPrepared().bind());
 		for (int i = 0; i < fields.size(); i++) {
-			bound.setString(i, fields.get(i).getAttribute("innerText"));
+			cassandraDao.getBound().setString(i, fields.get(i).getAttribute("innerText"));
 		}
-		session.execute(bound);
+		cassandraDao.getSession().execute(cassandraDao.getBound());
 	}
 	
 	/*
@@ -263,7 +265,7 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 	 */
 	private static void setIntOrNull(int index, String text) {
 		if (NumberUtils.isCreatable(text))
-			bound.setInt(index, Integer.parseInt(text));
+			cassandraDao.getBound().setInt(index, Integer.parseInt(text));
 	}
 	
 	/*
@@ -271,7 +273,7 @@ public class ScrapeHiddenTabsCassandra extends DBUtilCassandra {
 	 */
 	private static void setDoubleOrNull(int index, String text) {
 		if (NumberUtils.isCreatable(text))
-			bound.setDouble(index, Double.parseDouble(text));
+			cassandraDao.getBound().setDouble(index, Double.parseDouble(text));
 	}
 	
 	/*

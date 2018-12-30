@@ -1,4 +1,4 @@
-package com.wixsite.jingmacv;
+package com.wixsite.jingmacv.scrapers;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -10,11 +10,15 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import com.wixsite.jingmacv.dao.OracleDao;
+
 /*
  * This class deals with data on hidden tabs. 
  * To scrape hidden data, you need to use the .getAttribute("innerText") or .getAttribute("textContent") method.
  */
-public class ScrapeHiddenTabsOracle extends DBUtilOracle {
+public class HiddenTabsOracleScraper extends WebScraper {
+	
+	private static final OracleDao oracleDao = new OracleDao();
 	
 	/*
 	 * The only public method in this class. Scrapes a website for data.
@@ -59,28 +63,26 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	public static void resetTable(int tableIndex) {
 		// Deletes all data from the table.
 		try {
-			DBUtilOracle.initConnection();
-			stmt = conn.createStatement();
+			oracleDao.setStmt(oracleDao.getConn().createStatement());
 			if (tableIndex == 0)
-				stmt.executeQuery("DELETE FROM wsc_fund_basics");
+				oracleDao.getStmt().executeQuery("DELETE FROM wsc_fund_basics");
 			else if (tableIndex == 1)
-				stmt.executeQuery("DELETE FROM wsc_performance");
+				oracleDao.getStmt().executeQuery("DELETE FROM wsc_performance");
 			else if (tableIndex == 2)
-				stmt.executeQuery("DELETE FROM wsc_analysis");
+				oracleDao.getStmt().executeQuery("DELETE FROM wsc_analysis");
 			else if (tableIndex == 3)
-				stmt.executeQuery("DELETE FROM wsc_fundamentals");
+				oracleDao.getStmt().executeQuery("DELETE FROM wsc_fundamentals");
 			else if (tableIndex == 4)
-				stmt.executeQuery("DELETE FROM wsc_classification");
+				oracleDao.getStmt().executeQuery("DELETE FROM wsc_classification");
 			else if (tableIndex == 5)
-				stmt.executeQuery("DELETE FROM wsc_tax");
+				oracleDao.getStmt().executeQuery("DELETE FROM wsc_tax");
 			else if (tableIndex == 6)
-				stmt.executeQuery("DELETE FROM wsc_esg");
+				oracleDao.getStmt().executeQuery("DELETE FROM wsc_esg");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 	    	// Closes all transaction objects.
-		    DBUtilOracle.close(stmt);
-		    DBUtilOracle.close(conn);
+		    oracleDao.closeStatement();;
 	    }
 	}
 	
@@ -124,19 +126,18 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 * Saves a row to the wsc_fund_basics table.
 	 */
 	private static void saveFundBasicsRow(List<WebElement> fields) {
-		DBUtilOracle.initConnection();
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO wsc_fund_basics (ticker, fund_name, issuer, " + 
-										  "expense_ratio, aum, spread, segment) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			oracleDao.setPstmt(oracleDao.getConn().prepareStatement("INSERT INTO wsc_fund_basics (ticker, fund_name, issuer, " + 
+										  "expense_ratio, aum, spread, segment) VALUES (?, ?, ?, ?, ?, ?, ?)"));
 			for (int i = 0; i < fields.size(); i++) {
-				pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+				oracleDao.getPstmt().setString(i + 1, fields.get(i).getAttribute("innerText"));
 			}
-			pstmt.executeUpdate();
+			oracleDao.getPstmt().executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtilOracle.close(pstmt);
-			DBUtilOracle.close(conn);
+			oracleDao.closePreparedStatement();
+			oracleDao.closeConnection();
 		}		
 	}
 	
@@ -144,19 +145,18 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 * Saves a row to the wsc_performance table.
 	 */
 	private static void savePerformanceRow(List<WebElement> fields) {
-		DBUtilOracle.initConnection();
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO wsc_performance (ticker, fund_name, one_month, three_month, one_year, " + 
-										  "five_year, ten_year, as_of) VALUES (?, ?, ?, ?, ?, ?, ?, to_date(?, 'MM/dd/yyyy'))");
+			oracleDao.setPstmt(oracleDao.getConn().prepareStatement("INSERT INTO wsc_performance (ticker, fund_name, one_month, three_month, one_year, " + 
+										  "five_year, ten_year, as_of) VALUES (?, ?, ?, ?, ?, ?, ?, to_date(?, 'MM/dd/yyyy'))"));
 			for (int i = 0; i < fields.size(); i++) {
-				pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+				oracleDao.getPstmt().setString(i + 1, fields.get(i).getAttribute("innerText"));
 			}
-			pstmt.executeUpdate();
+			oracleDao.getPstmt().executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtilOracle.close(pstmt);
-			DBUtilOracle.close(conn);
+			oracleDao.closePreparedStatement();
+			oracleDao.closeConnection();
 		}
 	}
 	
@@ -164,10 +164,9 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 * Saves a row to the wsc_analysis table.
 	 */
 	private static void saveAnalysisRow(List<WebElement> fields) {
-		DBUtilOracle.initConnection();
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
-										  "grade, e, t, f) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			oracleDao.setPstmt(oracleDao.getConn().prepareStatement("INSERT INTO wsc_analysis (ticker, fund_name, issuer, segment, " + 
+										  "grade, e, t, f) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 			int fieldIndex = 1;
 			for (int i = 0; i < fields.size(); i++) {
 				if (i == 4)
@@ -176,15 +175,15 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 				if (fieldIndex == 6 || fieldIndex == 7 || fieldIndex == 8)
 					setIntOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
 				else
-					pstmt.setString(fieldIndex, fields.get(i).getAttribute("innerText"));
+					oracleDao.getPstmt().setString(fieldIndex, fields.get(i).getAttribute("innerText"));
 				fieldIndex++;
 			}
-			pstmt.executeUpdate();
+			oracleDao.getPstmt().executeUpdate();
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} finally {
-			DBUtilOracle.close(pstmt);
-			DBUtilOracle.close(conn);
+			oracleDao.closePreparedStatement();
+			oracleDao.closeConnection();
 		}
 	}
 	
@@ -192,10 +191,9 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 * Saves a row to the wsc_fundamentals table.
 	 */
 	private static void saveFundamentalsRow(List<WebElement> fields) {
-		DBUtilOracle.initConnection();
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
-										  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			oracleDao.setPstmt(oracleDao.getConn().prepareStatement("INSERT INTO wsc_fundamentals (ticker, fund_name, dividend_yield, pe, " + 
+										  "pb, duration, credit_quality, ytm) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 			int fieldIndex = 1;
 			// fields.size() - 1 is for the extra field in the List that contains "".
 			for (int i = 0; i < fields.size() - 1; i++) {
@@ -205,15 +203,15 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 				if (fieldIndex == 6)
 					setFloatOrNull(fieldIndex, fields.get(i).getAttribute("innerText"));
 				else
-					pstmt.setString(fieldIndex, fields.get(i).getAttribute("innerText"));
+					oracleDao.getPstmt().setString(fieldIndex, fields.get(i).getAttribute("innerText"));
 				fieldIndex++;
 			}
-			pstmt.executeUpdate();
+			oracleDao.getPstmt().executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtilOracle.close(pstmt);
-			DBUtilOracle.close(conn);
+			oracleDao.closePreparedStatement();
+			oracleDao.closeConnection();
 		}
 	}
 	
@@ -221,27 +219,26 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 * Saves a row to the wsc_classification table.
 	 */
 	private static void saveClassificationRow(List<WebElement> fields) {
-		DBUtilOracle.initConnection();
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO wsc_classification (ticker, fund_name, asset_class, strategy, region, " + 
+			oracleDao.setPstmt(oracleDao.getConn().prepareStatement("INSERT INTO wsc_classification (ticker, fund_name, asset_class, strategy, region, " + 
 					  					  "geography, category, focus, niche, inverse, leveraged, etn, underlying_index, " +
 					  					  "index_provider, selection_criteria, weighting_scheme, active_per_sec) " +
-										  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+										  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
 			for (int i = 0; i < fields.size(); i++) {
 				// The first two fields are switched around to match database columns.
 				if (i == 0)
-					pstmt.setString(i + 1, fields.get(1).getAttribute("innerText"));
+					oracleDao.getPstmt().setString(i + 1, fields.get(1).getAttribute("innerText"));
 				else if (i == 1)
-					pstmt.setString(i + 1, fields.get(0).getAttribute("innerText"));
+					oracleDao.getPstmt().setString(i + 1, fields.get(0).getAttribute("innerText"));
 				else
-					pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+					oracleDao.getPstmt().setString(i + 1, fields.get(i).getAttribute("innerText"));
 			}
-			pstmt.executeUpdate();
+			oracleDao.getPstmt().executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtilOracle.close(pstmt);
-			DBUtilOracle.close(conn);
+			oracleDao.closePreparedStatement();
+			oracleDao.closeConnection();
 		}
 }
 	
@@ -249,19 +246,18 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 * Saves a row to the wsc_tax table.
 	 */
 	private static void saveTaxRow(List<WebElement> fields) {
-		DBUtilOracle.initConnection();
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO wsc_tax (ticker, fund_name, legal_structure, max_lt_capital_gains_rate, " + 
-										  "max_st_capital_gains_rate, tax_reporting) VALUES (?, ?, ?, ?, ?, ?)");
+			oracleDao.setPstmt(oracleDao.getConn().prepareStatement("INSERT INTO wsc_tax (ticker, fund_name, legal_structure, max_lt_capital_gains_rate, " + 
+										  "max_st_capital_gains_rate, tax_reporting) VALUES (?, ?, ?, ?, ?, ?)"));
 			for (int i = 0; i < fields.size(); i++) {
-				pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+				oracleDao.getPstmt().setString(i + 1, fields.get(i).getAttribute("innerText"));
 			}
-			pstmt.executeUpdate();
+			oracleDao.getPstmt().executeUpdate();
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} finally {
-			DBUtilOracle.close(pstmt);
-			DBUtilOracle.close(conn);
+			oracleDao.closePreparedStatement();
+			oracleDao.closeConnection();
 		}
 	}
 
@@ -269,22 +265,21 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 * Saves a row to the wsc_esg table.
 	 */
 	private static void saveEsgRow(List<WebElement> fields) {
-		DBUtilOracle.initConnection();
 		try {
-			pstmt = conn.prepareStatement("INSERT INTO wsc_esg (ticker, fund_name, msci_esg_quality_score, " + 
+			oracleDao.setPstmt(oracleDao.getConn().prepareStatement("INSERT INTO wsc_esg (ticker, fund_name, msci_esg_quality_score, " + 
 										  "esg_score_peer_rank, esg_score_global_rank, carbon_intensity, " + 
 										  "sustainable_impact_exposure, sri_screening_crit_exposure) " +
-										  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+										  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"));
 			for (int i = 0; i < fields.size(); i++) {
-				pstmt.setString(i + 1, fields.get(i).getAttribute("innerText"));
+				oracleDao.getPstmt().setString(i + 1, fields.get(i).getAttribute("innerText"));
 			}
-			pstmt.executeUpdate();
+			oracleDao.getPstmt().executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtilOracle.close(pstmt);
-			DBUtilOracle.close(conn);
-		}		
+			oracleDao.closePreparedStatement();
+			oracleDao.closeConnection();
+		}
 	}
 	
 	/*
@@ -292,9 +287,9 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 */
 	private static void setIntOrNull(int index, String text) throws SQLException {
 		if (NumberUtils.isCreatable(text))
-			pstmt.setInt(index, Integer.parseInt(text));
+			oracleDao.getPstmt().setInt(index, Integer.parseInt(text));
 		else
-			pstmt.setNull(index, Types.INTEGER);
+			oracleDao.getPstmt().setNull(index, Types.INTEGER);
 	}
 	
 	/*
@@ -302,9 +297,9 @@ public class ScrapeHiddenTabsOracle extends DBUtilOracle {
 	 */
 	private static void setFloatOrNull(int index, String text) throws SQLException {
 		if (NumberUtils.isCreatable(text))
-			pstmt.setFloat(index, Float.parseFloat(text));
+			oracleDao.getPstmt().setFloat(index, Float.parseFloat(text));
 		else
-			pstmt.setNull(index, Types.INTEGER);
+			oracleDao.getPstmt().setNull(index, Types.INTEGER);
 	}
 	
 	/*

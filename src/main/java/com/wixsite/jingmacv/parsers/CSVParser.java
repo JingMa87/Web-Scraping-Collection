@@ -1,4 +1,4 @@
-package com.wixsite.jingmacv;
+package com.wixsite.jingmacv.parsers;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
