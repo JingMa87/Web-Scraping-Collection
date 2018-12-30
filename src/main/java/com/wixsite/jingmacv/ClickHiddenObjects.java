@@ -16,7 +16,7 @@ public class ClickHiddenObjects extends WebScraper {
 		// Initializes web driver.
 		init("http://www.etf.com/channels/bond-etfs");
 		// Closes the pop-up message.
-		driver.findElement(By.cssSelector(".popupCloseButton")).click();
+		//driver.findElement(By.cssSelector(".popupCloseButton")).click();
 		// Clicks on the next pages and prints the tab name.
 		clickNextLoop();
 		// Closes driver.
